@@ -1,0 +1,49 @@
+:root {
+    --green-primary: #4ade80;
+    --green-dim:     #22c55e;
+    --green-glow:    rgba(74, 222, 128, 0.08);
+    --green-border:  #1e4d2b;
+
+    --background-base:  #0f0f0f;
+    --background-nav:   #121212;
+
+    --text-main:     #e5e7eb;
+    --text-boring:    #6b7280;
+}
+
+body {
+    background-color: var(--background-base);
+    color: var(--text-main);
+}
+
+.navbar {
+    background-color: var(--background-nav);
+    border-bottom: 1px solid var(--green-border);
+}
+
+.navbar-brand {
+    color: var(--green-primary);
+    font-weight: 600;
+}
+
+.nav-link {
+    color: #9ca3af;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: color 0.1s, background 0.1s;
+}
+
+.nav-link:hover {
+    color: var(--green-primary);
+    background: var(--green-glow);
+}
+
+.nav-link.active {
+    color: var(--green-primary);
+    background: var(--green-glow);
+}
+
+footer {
+    color: var(--text-boring);
+    border-top: 1px solid var(--green-border);
+}
