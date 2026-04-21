@@ -13,22 +13,22 @@
 
     <div class="auth-tabs">
         <div class="auth-tab active">Sign Up</div>
-        <div class="auth-tab" >Log In</div>
+        <div class="auth-tab">Log In</div>
     </div>
 
     <div id="formsu">
         <div class="field-row">
-            <div><label class="auth-label">First name</label><input class="auth-input" placeholder="pibble"></div>
+            <div><label class="auth-label">First name</label><input class="auth-input"id="sufn" placeholder="pibble"></div>
             <div><label class="auth-label">Last name</label><input class="auth-input"  placeholder="Thedestroyer"></div>
         </div>
         <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="pibblethedestroyer@gmail.com">
         <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="8+ characters">
-        <button class="auth-btn" >Create Account</button>
+        <button class="auth-btn" onclick="handleAuth('su')" >Create Account</button>
     </div>
-    <div id="formli">
+    <div id="formli" class="hidden">
         <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="youz@email.com">
         <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="Youz password">
-        <button class="auth-btn">Log In</button>
+        <button class="auth-btn"onclick="handleAuth('li')">Log In</button>
     </div>
 
     
