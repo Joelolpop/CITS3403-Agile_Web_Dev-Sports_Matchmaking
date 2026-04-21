@@ -7,57 +7,68 @@
     <p>Connect with players who share your skill level, schedule, and style.</p>
 </div>
 
-<div class="auth-box" id="auth-box">
-    <h2>Join MatchUp</h2>
-    <p>Sign up or log in to start matching.</p>
-
-    <div class="auth-tabs">
-        <div class="auth-tab active" id="tabsu" onclick="switchTab('su')">Sign Up</div>
-        <div class="auth-tab" id="tabli" onclick="switchTab('li')">Log In</div>
+<div class="push-section">
+    <div class="push-left">
+        <p class="push-tag">— GET STARTED</p>
+        <h1>READY TO <span class="text-green">PLAY?</span></h1>
+        <p>Connect with players and <span class="text-green">IMPROVE</span> together!</p>
     </div>
+    <div class="push-right">
+        <div class="auth-box" id="auth-box">
+            <h2>Join MatchUp</h2>
+            <p>Sign up or log in to start matching.</p>
 
-    <div id="formsu">
-        <div class="field-row">
-            <div><label class="auth-label">First name</label><input class="auth-input"id="sufn" placeholder="pibble"></div>
-            <div><label class="auth-label">Last name</label><input class="auth-input"  placeholder="Thedestroyer"></div>
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tabsu" onclick="switchTab('su')">Sign Up</div>
+                <div class="auth-tab" id="tabli" onclick="switchTab('li')">Log In</div>
+            </div>
+
+            <div id="formsu">
+                <div class="field-row">
+                    <div><label class="auth-label">First name</label><input class="auth-input"id="sufn" placeholder="pibble"></div>
+                    <div><label class="auth-label">Last name</label><input class="auth-input"  placeholder="Thedestroyer"></div>
+                </div>
+                <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="pibblethedestroyer@gmail.com">
+                <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="8+ characters">
+                <button class="auth-btn" onclick="handleAuth('su')" >Create Account</button>
+            </div>
+            <div id="formli" class="hidden">
+                <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="youz@email.com">
+                <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="Youz password">
+                <button class="auth-btn"onclick="handleAuth('li')">Log In</button>
+            </div>
         </div>
-        <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="pibblethedestroyer@gmail.com">
-        <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="8+ characters">
-        <button class="auth-btn" onclick="handleAuth('su')" >Create Account</button>
-    </div>
-    <div id="formli" class="hidden">
-        <label class="auth-label">Email</label><input class="auth-input" type="email" placeholder="youz@email.com">
-        <label class="auth-label">Password</label><input class="auth-input" type="password" placeholder="Youz password">
-        <button class="auth-btn"onclick="handleAuth('li')">Log In</button>
+        <div class="auth-box hidden"id="create-box">
+            <h2>Create an event!</h2>
+            <p id="welcome">What are you playing?</p>
+            <label class="auth-label">Event name</label><input class="auth-input" placeholder="e.g. Tennis at UWA">
+            <div class="field-row">
+                <div>
+                    <label class="auth-label">Sport</label>
+                    <select class="auth-input">
+                        <option disabled selected>Choose</option>
+                        <option>Football</option><option>Basketball</option><option>Tennis</option>
+                        <option>Volleyball</option><option>Cricket</option><option>Other</option>
+                    </select>
+                </div>
+                <div><label class="auth-label">Spots</label><input class="auth-input" type="number" min="1" placeholder="10"></div>
+            </div>
+            <div class="field-row">
+                <div><label class="auth-label">Date</label><input class="auth-input" type="date"></div>
+                <div><label class="auth-label">Time</label><input class="auth-input" type="time"></div>
+            </div>
+            <label class="auth-label">Location</label><input class="auth-input" placeholder="e.g. Nedlands">
+            <label class="auth-label">Description</label>
+            <textarea class="auth-input" placeholder="Any extra details..."></textarea>
+            <button class="auth-btn">Create Event →</button>
+        </div>
+        
     </div>
 
     
 </div>
 
-<div class="auth-box hidden">
-    <h2>Create an event!</h2>
-    <p id="welcome">What are you playing?</p>
-    <label class="auth-label">Event name</label><input class="auth-input" placeholder="e.g. Tennis at UWA">
-    <div class="field-row">
-        <div>
-            <label class="auth-label">Sport</label>
-            <select class="auth-input">
-                <option disabled selected>Choose</option>
-                <option>Football</option><option>Basketball</option><option>Tennis</option>
-                <option>Volleyball</option><option>Cricket</option><option>Other</option>
-            </select>
-        </div>
-        <div><label class="auth-label">Spots</label><input class="auth-input" type="number" min="1" placeholder="10"></div>
-    </div>
-    <div class="field-row">
-        <div><label class="auth-label">Date</label><input class="auth-input" type="date"></div>
-        <div><label class="auth-label">Time</label><input class="auth-input" type="time"></div>
-    </div>
-    <label class="auth-label">Location</label><input class="auth-input" placeholder="e.g. Nedlands">
-    <label class="auth-label">Description</label>
-    <textarea class="auth-input" placeholder="Any extra details..."></textarea>
-    <button class="auth-btn">Create Event →</button>
-</div>
+
 
 <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 

@@ -69,3 +69,25 @@
 .hidden {
     display: none;
 }
+.push-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 4rem 0;
+}
+
+.push-left {
+    flex: 1;
+}
+
+.push-right {
+    flex: 1;
+}
+
+.push-tag {
+    color: var(--text-boring);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}

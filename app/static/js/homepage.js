@@ -1,8 +1,12 @@
 function handleAuth(type) {
     if (type === 'su') {
         console.log('signing up...');
+        document.getElementById('auth-box').classList.add('hidden');
+        document.getElementById('create-box').classList.remove('hidden');
     } else {
         console.log('logging in...');
+        document.getElementById('auth-box').classList.add('hidden');
+        document.getElementById('create-box').classList.remove('hidden');
     }
 }
 
