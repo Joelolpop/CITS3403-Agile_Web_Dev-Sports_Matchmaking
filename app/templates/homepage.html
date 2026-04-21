@@ -12,8 +12,8 @@
     <p>Sign up or log in to start matching.</p>
 
     <div class="auth-tabs">
-        <div class="auth-tab active">Sign Up</div>
-        <div class="auth-tab">Log In</div>
+        <div class="auth-tab active" id="tabsu" onclick="switchTab('su')">Sign Up</div>
+        <div class="auth-tab" id="tabli" onclick="switchTab('li')">Log In</div>
     </div>
 
     <div id="formsu">
@@ -34,6 +34,6 @@
     
 </div>
 
-
+<script src="../static/js/homepage.js"></script>
 
 {% endblock %}
