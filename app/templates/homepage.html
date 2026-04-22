@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
+<div class="py-5">
+    <h1>Find your <span class="text-success">perfect</span> match.</h1>
+    <p>Connect with players who share your skill level, schedule, and style.</p>
+</div>
+
+<div class="d-flex align-items-center justify-content-between gap-4 py-5">
+    <div class="flex-fill">
+        <p class="text-secondary small text-uppercase mb-3">— GET STARTED</p>
+        <h1>READY TO <span class="text-success">PLAY?</span></h1>
+        <p>Connect with players and <span class="text-success">IMPROVE</span> together!</p>
+    </div>
+    <div class="flex-fill">
+
+        
+        <div class="card border-success p-4" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
+            <h2>Join MatchUp</h2>
+            <p>Sign up or log in to start matching.</p>
+
+            
+            <div class="d-flex border border-success rounded p-1 mb-4" style="background: var(--background-base);">
+                <div class="flex-fill text-center py-2 rounded text-success border border-success fw-semibold" id="tabsu" onclick="switchTab('su')" style="background: var(--green-glow); cursor: pointer;">Sign Up</div>
+                <div class="flex-fill text-center py-2 rounded text-secondary" id="tabli" onclick="switchTab('li')" style="cursor: pointer;">Log In</div>
+            </div>
+
+            
+            <div id="formsu">
+                <div class="row g-3 mb-2">
+                    <div class="col">
+                        <label class="form-label text-secondary small">First name</label>
+                        <input class="form-control bg-dark border-success" id="sufn" placeholder="pibble">
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-secondary small">Last name</label>
+                        <input class="form-control bg-dark border-success" placeholder="Thedestroyer">
+                    </div>
+                </div>
+                <label class="form-label text-secondary small">Email</label>
+                <input class="form-control bg-dark border-success mb-3" type="email" placeholder="pibblethedestroyer@gmail.com">
+                <label class="form-label text-secondary small">Password</label>
+                <input class="form-control bg-dark border-success mb-3" type="password" placeholder="8+ characters">
+                <button class="btn btn-success w-100 fw-semibold" onclick="handleAuth('su')">Create Account</button>
+            </div>
+
+            
+            <div id="formli" class="d-none">
+                <label class="form-label text-secondary small">Email</label>
+                <input class="form-control bg-dark border-success mb-3" type="email" placeholder="youz@email.com">
+                <label class="form-label text-secondary small">Password</label>
+                <input class="form-control bg-dark border-success mb-3" type="password" placeholder="Youz password">
+                <button class="btn btn-success w-100 fw-semibold" onclick="handleAuth('li')">Log In</button>
+            </div>
+        </div>
+
+        
+        <div class="card border-success p-4 d-none" id="create-box" style="max-width: 480px; background: var(--background-nav);">
+            <h2>Create an event!</h2>
+            <p id="welcome">What are you playing?</p>
+            <label class="form-label text-secondary small">Event name</label>
+            <input class="form-control bg-dark border-success mb-3" placeholder="e.g. Tennis at UWA">
+            <div class="row g-3 mb-2">
+                <div class="col">
+                    <label class="form-label text-secondary small">Sport</label>
+                    <select class="form-select bg-dark border-success">
+                        <option disabled selected>Choose</option>
+                        <option>Football</option>
+                        <option>Basketball</option>
+                        <option>Tennis</option>
+                        <option>Volleyball</option>
+                        <option>Cricket</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label text-secondary small">Spots</label>
+                    <input class="form-control bg-dark border-success" type="number" min="1" placeholder="10">
+                </div>
+            </div>
+            <div class="row g-3 mb-2">
+                <div class="col">
+                    <label class="form-label text-secondary small">Date</label>
+                    <input class="form-control bg-dark border-success" type="date">
+                </div>
+                <div class="col">
+                    <label class="form-label text-secondary small">Time</label>
+                    <input class="form-control bg-dark border-success" type="time">
+                </div>
+            </div>
+            <label class="form-label text-secondary small">Location</label>
+            <input class="form-control bg-dark border-success mb-3" placeholder="e.g. Nedlands">
+            <label class="form-label text-secondary small">Description</label>
+            <textarea class="form-control bg-dark border-success mb-3" placeholder="Any extra details..."></textarea>
+            <button class="btn btn-success w-100 fw-semibold">Create Event </button>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
+
+{% endblock %}

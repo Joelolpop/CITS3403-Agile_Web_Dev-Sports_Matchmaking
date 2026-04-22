@@ -1,0 +1,10 @@
+.form-control::placeholder,
+.form-select::placeholder {
+    color: #6c757d ;
+    opacity: 1;
+}
+
+.form-control,
+.form-select {
+    color: #e0e0e0 ;
+}
