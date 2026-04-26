@@ -76,6 +76,24 @@
 
     </div>
 
+    <!-- RIGHT: Spots progression -->
+    <div class="col-lg-4">
+        <div class="event-card p-4">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary small">Spots filled</span>
+                <span class="text-success fw-bold small">{{ event.spots_total - event.spots_filled }} left</span>
+            </div>
+            <div class="progress mb-4" style="height: 6px; background-color: var(--green-border);">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ (event.spots_filled / event.spots_total * 100)|int }}%">
+                </div>
+            </div>
+
+            
+
+        </div>
+    </div>
+
     
 
 </div>
