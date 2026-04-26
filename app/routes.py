@@ -17,7 +17,7 @@ def event_view(event_id):
         "date": "Sat 3 May 2026",
         "time": "10:00 AM",
         "location": "Nedlands",
-        "postcode": "6009",
+        "postcode": 6009,
         "description": "Casual doubles at the UWA courts. All skill levels welcome. Bring your own racket if you have one, balls provided.",
         "spots_total": 10,
         "spots_filled": 3,
