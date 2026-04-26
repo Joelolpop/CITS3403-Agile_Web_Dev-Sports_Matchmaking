@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/event_view.css') }}">
+
+<div class="row g-4">
+
+    <!-- LEFT:Main info -->
+    <div class="col-lg-8 d-flex flex-column gap-4">
+
+        <!-- Header deatails card -->
+        <div class="event-card p-4">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+                <div>
+                    <span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
+                    <h1 class="h3 fw-bold mb-1">{{ event.name }}</h1>
+                    <p class="text-secondary small mb-0">Hosted by <span class="text-success">@{{ event.host }}</span></p>
+                </div>
+
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Date</div>
+                    <div class="fw-medium">{{ event.date }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Time</div>
+                    <div class="fw-medium">{{ event.time }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Location</div>
+                    <div class="fw-medium">{{ event.location }}, {{ event.postcode }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Spots</div>
+                    <div class="fw-medium">{{ event.spots_filled }} / {{ event.spots_total }} filled</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description card -->
+        <div class="event-card p-4">
+            <h5 class="fw-semibold mb-3">About this event</h5>
+            <p class="text-secondary mb-0">{{ event.description }}</p>
+        </div>
+
+        
+
+    </div>
+
+    
+
+</div>
+
+{% endblock %}
