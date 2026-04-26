@@ -46,6 +46,32 @@
             <p class="text-secondary mb-0">{{ event.description }}</p>
         </div>
 
+        <!-- Attendees card -->
+        <div class="event-card p-4">
+            <h5 class="fw-semibold mb-3">
+                Who's going <span class="text-secondary fw-normal small">({{ event.spots_filled }})</span>
+            </h5>
+            <div class="d-flex flex-wrap gap-3 align-items-center">
+
+                {% for attendee in event.attendees %}
+                <div class="d-flex align-items-center gap-2">
+                    <div class=>{{ attendee.name[0] }}</div>
+                    <span class="small">{{ attendee.name }}</span>
+                    {% if attendee.is_host %}
+                        <span class="badge text-success border border-success bg-transparent rounded-pill small">Host</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% for i in range(event.spots_total - event.spots_filled) %}
+                <div class="d-flex align-items-center gap-2">
+                    <div class=" bg-transparent border border-secondary text-secondary" style="border-style: dashed !important;">+</div>
+                    <span class="small text-secondary">Open spot</span>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
         
 
     </div>
