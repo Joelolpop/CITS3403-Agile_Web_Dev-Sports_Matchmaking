@@ -95,11 +95,22 @@
                      style="width: {{ (event.spots_filled / event.spots_total * 100)|int }}%">
                 </div>
             </div>
+            {% if user_has_joined %}
+                <button class="btn btn-outline-success w-100 fw-semibold mb-2" disabled>✓ Joined</button>
+                <a href="/events/{{ event.id }}/leave" class="btn btn-outline-danger w-100 fw-semibold small">Leave event</a>
+            {% else %}
+                <a href="/events/{{ event.id }}/join" class="btn btn-success w-100 fw-semibold">Join Event</a>
+            {% endif %}
 
             
 
         </div>
+
+
+        
     </div>
+    
+
 
     
 
