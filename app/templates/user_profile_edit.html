@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
+<div class="py-4">
+	<h1>Edit <span class="text-success">User</span> Profile</h1>
+	<p class="text-secondary">Update your details below so we can match you with the right players.</p>
+</div>
+
+<div class="row justify-content-center py-3">
+	<div class="col-12 col-lg-8">
+		<div class="card border-success p-4 p-md-5" style="background: var(--background-nav);">
+			<h2 class="mb-4">EDIT PROFILE</h2>
+
+			<form id="user-profile-form">
+				<label class="form-label text-secondary small">User Name</label>
+				<input class="form-control text-success bg-dark border-success mb-3" type="text" name="username" placeholder="Enter your user name">
+
+				<div class="row g-3 mb-1">
+					<div class="col-12 col-md-6">
+						<label class="form-label text-secondary small">First Name</label>
+						<input class="form-control text-success bg-dark border-success" type="text" name="first_name" placeholder="Enter your first name">
+					</div>
+					<div class="col-12 col-md-6">
+						<label class="form-label text-secondary small">Last Name</label>
+						<input class="form-control text-success bg-dark border-success" type="text" name="last_name" placeholder="Enter your last name">
+					</div>
+				</div>
+
+				<div class="row g-3 mt-1 mb-1">
+					<div class="col-12 col-md-6">
+						<label class="form-label text-secondary small">Gender</label>
+						<select class="form-select bg-dark border-success" name="gender">
+							<option disabled selected>Select gender</option>
+							<option>MALE</option>
+							<option>FEMALE</option>
+							<option>Others</option>
+						</select>
+					</div>
+					<div class="col-12 col-md-6">
+						<label class="form-label text-secondary small">Postcode</label>
+						<input class="form-control text-success bg-dark border-success" type="text" name="postcode" placeholder="e.g. 6009">
+					</div>
+				</div>
+
+				<label class="form-label text-secondary small mt-3">Sport <span class="text-secondary">(select up to 3)</span></label>
+				<div id="sport-chips" class="d-flex flex-wrap gap-2 mb-2">
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Soccer">Soccer</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Basketball">Basketball</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Tennis">Tennis</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Netball">Netball</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Cricket">Cricket</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Australian Rules Football">Aus Rules Football</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Swimming">Swimming</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Rugby">Rugby</button>
+					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Golf">Golf</button>
+				</div>
+				<div id="sport-count" class="form-text text-secondary mb-4">0 / 3 selected</div>
+				<input type="hidden" id="sport-hidden" name="sports">
+
+				<button type="submit" class="btn btn-success w-100 fw-semibold">Save Changes</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/user_profile_edit.js') }}"></script>
+
+
+{% endblock %}

@@ -7,6 +7,12 @@ def homepage():
     return render_template("homepage.html")
 
 
+@main.route("/profile")
+def profile():
+    return render_template("user_profile_edit.html")
+
+
+
 
 
 
