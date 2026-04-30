@@ -85,15 +85,49 @@
                 <textarea
                     class="form-control text-success bg-dark border-success mb-4"
                     name="description">{{ event.description }}</textarea>
- 
-                
+
+
+
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-success w-100 fw-semibold mb-2">Save Changes</button>
+                <button
+                    type="button"
+                    class="btn btn-outline-danger w-100 fw-semibold mb-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal">
+                    Delete Event
+                </button>
+                <a href="/events/{{ event.id }}" class="btn btn-outline-secondary w-100">Cancel</a>
+
+
  
             </form>
         </div>
  
     </div>
 </div>
- 
+
+ <!-- Delete event confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-danger">
+            <div class="modal-header border-danger">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Event</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-secondary">
+                Are you sure you want to delete <span class="text-white fw-semibold">{{ event.name }}</span>? This cannot be undone.
+            </div>
+            <div class="modal-footer border-danger">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form>
+                    <button type="submit" class="btn btn-danger fw-semibold">Yes, delete it</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
  
 {% endblock %}
