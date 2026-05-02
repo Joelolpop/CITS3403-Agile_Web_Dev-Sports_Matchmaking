@@ -11,3 +11,13 @@ def homepage():
 def profile():
     return render_template("user_profile_edit.html")
 
+
+
+
+
+
+
+
+@main.route("/events/<int:event_id>")
+def event_view(event_id):
+    return render_template("event_view.html", event_id=event_id,user_has_joined=False)

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/event_view.css') }}">
+
+<div class="mb-4">
+    <p class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.1em;">Event Details</p>
+    <h2 class="fw-bold mb-0">
+        Viewing <span class="text-success">your</span>  event
+    </h2>
+</div>
+
+<div class="row g-4">
+
+    <!-- LEFT:Main info -->
+    <div class="col-lg-8 d-flex flex-column gap-4">
+
+        <!-- Header deatails card -->
+        <div class="event-card p-4">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+                <div>
+                    <span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
+                    <h1 class="h3 fw-bold mb-1">{{ event.name }}</h1>
+                    <p class="text-secondary small mb-0">Hosted by <span class="text-success">@{{ event.host }}</span></p>
+                </div>
+
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Date</div>
+                    <div class="fw-medium">{{ event.date }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Time</div>
+                    <div class="fw-medium">{{ event.time }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Location</div>
+                    <div class="fw-medium">{{ event.location }}, {{ event.postcode }}</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Spots</div>
+                    <div class="fw-medium">{{ event.spots_filled }} / {{ event.spots_total }} filled</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description card -->
+        <div class="event-card p-4">
+            <h5 class="fw-semibold mb-3">About this event</h5>
+            <p class="text-secondary mb-0">{{ event.description }}</p>
+        </div>
+
+        <!-- Attendees card -->
+        <div class="event-card p-4">
+            <h5 class="fw-semibold mb-3">
+                Who's going <span class="text-secondary fw-normal small">({{ event.spots_filled }})</span>
+            </h5>
+            <div class="d-flex flex-wrap gap-3 align-items-center">
+
+                {% for attendee in event.attendees %}
+                <div class="d-flex align-items-center gap-2">
+                    <div class=>{{ attendee.name[0] }}</div>
+                    <span class="small">{{ attendee.name }}</span>
+                    {% if attendee.is_host %}
+                        <span class="badge text-success border border-success bg-transparent rounded-pill small">Host</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% for i in range(event.spots_total - event.spots_filled) %}
+                <div class="d-flex align-items-center gap-2">
+                    <div class=" bg-transparent border border-secondary text-secondary" style="border-style: dashed !important;">+</div>
+                    <span class="small text-secondary">Open spot</span>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        
+
+    </div>
+
+    <!-- RIGHT: Spots progression -->
+    <div class="col-lg-4">
+        <div class="event-card p-4">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary small">Spots filled</span>
+                <span class="text-success fw-bold small">{{ event.spots_total - event.spots_filled }} left</span>
+            </div>
+            <div class="progress mb-4" style="height: 6px; background-color: var(--green-border);">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ (event.spots_filled / event.spots_total * 100)|int }}%">
+                </div>
+            </div>
+            {% if user_has_joined %}
+                <button class="btn btn-outline-success w-100 fw-semibold mb-2" disabled>✓ Joined</button>
+                <a href="/events/{{ event.id }}/leave" class="btn btn-outline-danger w-100 fw-semibold small">Leave event</a>
+            {% else %}
+                <a href="/events/{{ event.id }}/join" class="btn btn-success w-100 fw-semibold">Join Event</a>
+            {% endif %}
+
+            
+
+        </div>
+
+
+        
+    </div>
+    
+
+
+    
+
+</div>
+
+{% endblock %}
