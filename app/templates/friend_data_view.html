@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
+<div class="py-4">
+    <div class="d-flex align-items-center gap-3">
+        <a href="/friends" class="btn btn-outline-secondary btn-sm">← Back</a>
+        <h1>Friend <span class="text-success">Profile</span></h1>
+    </div>
+</div>
+
+<div class="row justify-content-center py-3">
+    <div class="col-12 col-lg-8">
+        <div class="card border-success p-4 p-md-5" style="background: var(--background-nav);">
+            
+            <div class="text-center mb-4">
+                <div class="rounded-circle bg-dark border border-success d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <!-- Placeholder for profile picture, can be replaced with an <img> tag if available -->
+                </div>
+                <h2 class="mb-1 text-success">{{ friend.username }}</h2>
+            </div>
+
+            <hr class="border-success opacity-25 mb-4">
+
+            <div class="row g-4">
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-secondary small d-block">Full Name</label>
+                    <p class="fs-5 text-success">{{ friend.first_name }} {{ friend.last_name }}</p>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-secondary small d-block">Location (Postcode)</label>
+                    <p class="fs-5 text-success">{{ friend.postcode }}</p>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-secondary small d-block">Gender</label>
+                    <p class="fs-5 text-success">{{ friend.gender }}</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <label class="form-label text-secondary small">Sports</label>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for sport in friend.sports %}
+                        <span class="badge rounded-pill bg-dark border border-success text-success px-3 py-2">
+                            {{ sport }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mt-5 row g-2">
+                <div class="col-12">
+                    <button type="button" 
+                            id="removeFriendBtn" 
+                            data-friend-id="{{ friend.id }}"
+                            data-friend-url="{{ url_for('main.friends_list') }}" 
+                            class="btn btn-outline-danger w-100 fw-semibold">
+                        Remove Friend
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/friends_data_view.js') }}"></script>
+{% endblock %}
