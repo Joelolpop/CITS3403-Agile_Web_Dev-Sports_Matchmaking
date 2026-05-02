@@ -11,6 +11,10 @@ def homepage():
 def profile():
     return render_template("user_profile_edit.html")
 
+@main.route("/friends")
+def friends_list():
+    return render_template("friends_view.html")
+
 @main.route("/friends/data")
 def friend_data():
     return render_template("friend_data_view.html")
