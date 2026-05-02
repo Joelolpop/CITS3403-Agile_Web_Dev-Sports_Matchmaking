@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/event_joined_available.css') }}">
+
+<div class="split-header mb-4">
+	<p class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.1em;">Events</p>
+	<h2 class="fw-bold mb-0">Events Available & Events Joined</h2>
+	<p class="text-secondary mb-0 mt-2">
+	</p>
+</div>
+
+<div class="row g-4 split-events-layout">
+	<div class="col-lg-7">
+		<section class="event-section-card p-4 h-100">
+			<h4 class="fw-semibold mb-3">Events Available</h4>
+
+			{% for event in events_available %}
+			<article class="available-event-item {% if not loop.last %}mb-4{% endif %}">
+				<p class="mb-1"><strong>Event Name:</strong>
+					<a href="{{ event.external_url }}" target="_blank" rel="noopener noreferrer" class="event-link">{{ event.name }}</a>
+				</p>
+				<p class="mb-1"><strong>Location:</strong> {{ event.location }}</p>
+				<p class="mb-0"><strong>Description:</strong> {{ event.description }}</p>
+			</article>
+			{% else %}
+			<article class="available-event-item">
+				<p class="mb-1"><strong>Event Name:</strong> </p>
+				<p class="mb-1"><strong>Location:</strong> </p>
+				<p class="mb-0"><strong>Description:</strong> </p>
+			</article>
+			{% endfor %}
+		</section>
+	</div>
+
+	<div class="col-lg-5">
+		<section class="event-section-card p-4 h-100">
+			<h4 class="fw-semibold mb-3">Events Joined</h4>
+
+			{% for event in events_joined %}
+			<article class="joined-event-item {% if not loop.last %}mb-2{% endif %}">
+				<p class="mb-0"><strong>Event Name:</strong> {{ event.name }}</p>
+			</article>
+			{% else %}
+			<article class="joined-event-item">
+				<p class="mb-0"><strong>Event Name:</strong> </p>
+			</article>
+			{% endfor %}
+		</section>
+	</div>
+</div>
+
+
+
+
+
+
+{% endblock %}
