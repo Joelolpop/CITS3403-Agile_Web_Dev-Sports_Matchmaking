@@ -1,0 +1,31 @@
+.event-section-card {
+    background-color: var(--background-nav);
+    border: 1px solid var(--green-border);
+    border-radius: 12px;
+}
+
+.available-event-item,
+.joined-event-item {
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.01);
+    padding: 12px;
+}
+
+.event-link {
+    color: var(--green-primary);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.event-link:hover {
+    color: #86efac;
+    border-color: #86efac;
+}
+
+@media (max-width: 991.98px) {
+    .split-events-layout > div {
+        width: 100%;
+    }
+}
