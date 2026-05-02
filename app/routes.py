@@ -14,3 +14,17 @@ def profile():
 @main.route("/friends/data")
 def friend_data():
     return render_template("friend_data_view.html")
+
+
+
+
+
+
+
+@main.route("/events/<int:event_id>")
+def event_view(event_id):
+    return render_template("event_view.html", event_id=event_id,user_has_joined=False)
+
+@main.route("/events/<int:event_id>/edit")
+def event_edit(event_id):
+    return render_template("event_edit.html", event_id=event_id)
