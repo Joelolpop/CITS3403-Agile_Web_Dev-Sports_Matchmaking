@@ -1,0 +1,6 @@
+.event-card {
+    background-color: var(--background-nav);
+    border: 1px solid var(--green-border);
+    border-radius: 12px;
+}
+
