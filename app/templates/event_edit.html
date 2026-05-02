@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+ 
+        <div class="d-flex align-items-center mb-3 gap-2">
+            <a href="/events/{{ event.id }}" class="text-secondary small text-decoration-none">
+                ← Back to event
+            </a>
+        </div>
+ 
+        <div class="card border-success p-4" style="background: var(--background-nav);">
+            <h2 class="mb-1">Edit <span class="text-success">Event</span></h2>
+            <p class="text-secondary small mb-4">Update the details below and save your changes.</p>
+ 
+            <form>
+ 
+                <label class="form-label text-secondary small">Event name</label>
+                <input
+                    class="form-control text-success bg-dark border-success mb-3"
+                    name="name"
+                    value="{{ event.name }}">
+ 
+                <div class="row g-3 mb-2">
+                    <div class="col">
+                        <label class="form-label text-secondary small">Sport</label>
+                        <select class="form-select bg-dark border-success text-success" name="sport">
+                            <option disabled>Choose</option>
+                            <option {% if event.sport == 'Soccer' %}selected{% endif %}>Soccer</option>
+                            <option {% if event.sport == 'Basketball' %}selected{% endif %}>Basketball</option>
+                            <option {% if event.sport == 'Tennis' %}selected{% endif %}>Tennis</option>
+                            <option {% if event.sport == 'Netball' %}selected{% endif %}>Netball</option>
+                            <option {% if event.sport == 'Cricket' %}selected{% endif %}>Cricket</option>
+                            <option {% if event.sport == 'Australian Rules Football' %}selected{% endif %}>Australian Rules Football</option>
+                            <option {% if event.sport == 'Swimming' %}selected{% endif %}>Swimming</option>
+                            <option {% if event.sport == 'Rugby' %}selected{% endif %}>Rugby</option>
+                            <option {% if event.sport == 'Golf' %}selected{% endif %}>Golf</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-secondary small">Spots</label>
+                        <input
+                            class="form-control text-success bg-dark border-success"
+                            type="number"
+                            name="spots"
+                            min="1"
+                            value="{{ event.spots_total }}">
+                    </div>
+                </div>
+ 
+                <div class="row g-3 mb-2">
+                    <div class="col">
+                        <label class="form-label text-secondary small">Date</label>
+                        <input
+                            class="form-control text-success bg-dark border-success"
+                            type="date"
+                            name="date"
+                            value="{{ event.date }}">
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-secondary small">Time</label>
+                        <input
+                            class="form-control text-success bg-dark border-success"
+                            type="time"
+                            name="time"
+                            value="{{ event.time }}">
+                    </div>
+                </div>
+ 
+                <label class="form-label text-secondary small mt-1">Location</label>
+                <input
+                    class="form-control text-success bg-dark border-success mb-3"
+                    name="location"
+                    value="{{ event.location }}">
+ 
+                <label class="form-label text-secondary small">Postcode</label>
+                <input
+                    class="form-control text-success bg-dark border-success mb-3"
+                    name="postcode"
+                    value="{{ event.postcode }}">
+ 
+                <label class="form-label text-secondary small">Description</label>
+                <textarea
+                    class="form-control text-success bg-dark border-success mb-4"
+                    name="description">{{ event.description }}</textarea>
+
+
+
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-success w-100 fw-semibold mb-2">Save Changes</button>
+                <button
+                    type="button"
+                    class="btn btn-outline-danger w-100 fw-semibold mb-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal">
+                    Delete Event
+                </button>
+                <a href="/events/{{ event.id }}" class="btn btn-outline-secondary w-100">Cancel</a>
+
+
+ 
+            </form>
+        </div>
+ 
+    </div>
+</div>
+
+ <!-- Delete event confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-danger">
+            <div class="modal-header border-danger">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Event</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-secondary">
+                Are you sure you want to delete <span class="text-white fw-semibold">{{ event.name }}</span>? This cannot be undone.
+            </div>
+            <div class="modal-footer border-danger">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form>
+                    <button type="submit" class="btn btn-danger fw-semibold">Yes, delete it</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ 
+{% endblock %}
