@@ -28,3 +28,37 @@
 #emoji-swapper .emo.active {
     opacity: 1;  
 }
+
+.panel {
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid var(--green-border);
+    padding-top: 16px;
+    margin-bottom: 2rem;
+}
+
+.panel-track {
+    display: inline-flex;
+    animation: panel-slide 32s linear infinite;
+}
+
+.panel-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 32px;
+    font-size: 16px;
+    color: var(--text-boring);
+}
+
+.panel-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--green-primary);
+    border-radius: 50%;
+}
+
+@keyframes panel-slide {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
