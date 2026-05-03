@@ -1,3 +1,5 @@
+
+// Handle authentication actions (also switches to create event view after auth)
 function handleAuth(type) {
     if (type === 'su') {
         console.log('signing up...');
@@ -8,6 +10,7 @@ function handleAuth(type) {
     document.getElementById('create-box').classList.remove('d-none');
 }
 
+//tab switcher-changes tab when pressing on signup or login
 function switchTab(tab) {
     const suForm = document.getElementById('formsu');
     const liForm = document.getElementById('formli');
@@ -34,3 +37,13 @@ function switchTab(tab) {
         tabSu.style.background = 'transparent';
     }
 }
+
+
+//Swaps emojis to make it look like an animation.
+const emos = document.querySelectorAll('.emo');
+let cur = 0;
+setInterval(() => {
+    emos[cur].classList.remove('active');
+    cur = (cur + 1) % emos.length;
+    emos[cur].classList.add('active');
+}, 2000);
