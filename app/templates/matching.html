@@ -14,11 +14,22 @@
     <div class="col-12 col-md-6 col-lg-4 player-card-container">
       <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
         <div class="card-body text-center p-4">
+          <div class="w-100" style="height: 350px; overflow: hidden;">
+            <!-- Placeholder for profile picture, can be replaced with an <img> tag if available -->
+            <div class="w-100 h-100 bg-dark d-flex align-items-center justify-content-center">
+              <span class="text-success display-1 fw-bold">{{ player.username[0]|upper }}</span>
+            </div>
+          </div>
           <h5 class="card-title">{{ player.username }}</h5>
           <p class="card-text text-white">{{ player.location }}</p>
           <p class="card-text text-white">{{ player.sport }}</p>
           <div class="mt-3 row g-2">
-            <button onclick = "handleConnect(this)" class="btn btn-sm btn-outline-success w-100">Connect</button>
+            <div class="col-12 col-md-6"></div>
+              <button onclick = "handleConnect(this)" class="btn btn-sm btn-outline-success w-100">Connect</button>
+            </div>
+            <div class="col-12 col-md-6">
+              <button onclick = "handlePass(this)" class="btn btn-sm btn-outline-danger w-100">Pass</button>
+            </div>
           </div>
         </div>
       </div>
