@@ -31,13 +31,15 @@ def events_joined_available_alias():
     return render_template("event_joined_available.html")
 
 
-
-
-
 @main.route("/events/<int:event_id>")
 def event_view(event_id):
     return render_template("event_view.html", event_id=event_id,user_has_joined=False)
 
+
 @main.route("/events/<int:event_id>/edit")
 def event_edit(event_id):
     return render_template("event_edit.html", event_id=event_id)
+
+@main.route("/matching")
+def matching():
+    return render_template("matching.html")
