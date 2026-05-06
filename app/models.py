@@ -73,4 +73,14 @@ class Events(db.Model):
     @property
     def host(self):
         return self.owner.username if self.owner else None
-    
+
+class Attendees(db.Model):
+    __tablename__ = 'attendees'
+
+    id       = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'), nullable=False)
+    user_id  = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    is_host  = db.Column(db.Boolean, default=False, nullable=False)
+
+    event = db.relationship('Events', back_populates='members')
+    user  = db.relationship('Users', foreign_keys=[user_id])
