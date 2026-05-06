@@ -33,3 +33,14 @@ class Matching(db.Model):
         if self.response_a == 'Accept' and self.response_b == 'Accept':
             return 'Friends'
         return 'Skip'
+
+
+class Friends(db.Model):
+    __tablename__ = 'friends'
+
+    id        = db.Column(db.Integer, primary_key=True)
+    user_id   = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    friend_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user   = db.relationship('Users', foreign_keys=[user_id])
+    friend = db.relationship('Users', foreign_keys=[friend_id])
+
