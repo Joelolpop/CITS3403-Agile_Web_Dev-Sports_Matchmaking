@@ -44,3 +44,33 @@ class Friends(db.Model):
     user   = db.relationship('Users', foreign_keys=[user_id])
     friend = db.relationship('Users', foreign_keys=[friend_id])
 
+
+class Events(db.Model):
+    __tablename__ = 'events'
+
+    event_id          = db.Column(db.Integer, primary_key=True)
+    owner_id          = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    event_name        = db.Column(db.String(128), nullable=False)
+    sport             = db.Column(db.String(64), nullable=False)
+    location          = db.Column(db.String(128), nullable=False)
+    postcode          = db.Column(db.String(4), nullable=False)
+    description       = db.Column(db.Text)
+    date              = db.Column(db.Date, nullable=False)
+    time              = db.Column(db.Time, nullable=False)
+    spots_total       = db.Column(db.Integer, nullable=False)
+
+    owner   = db.relationship('Users', foreign_keys=[owner_id])
+    members = db.relationship('Attendees', back_populates='event', cascade='all, delete-orphan')
+
+    @property
+    def name(self):
+        return self.event_name
+
+    @property
+    def spots_filled(self):
+        return len(self.members)
+
+    @property
+    def host(self):
+        return self.owner.username if self.owner else None
+    
