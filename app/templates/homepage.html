@@ -62,8 +62,8 @@
             {% endwith %}
 
             <div class="d-flex border border-success rounded p-1 mb-4" style="background: var(--background-base);">
-                <div class="flex-fill text-center py-2 rounded text-success border border-success fw-semibold" id="tabsu" onclick="switchTab('su')" style="background: var(--green-glow); cursor: pointer;">Sign Up</div>
-                <div class="flex-fill text-center py-2 rounded text-secondary" id="tabli" onclick="switchTab('li')" style="cursor: pointer;">Log In</div>
+                <div class="flex-fill text-center py-2 rounded text-success border border-success fw-semibold"id="tabsu" style="background: var(--green-glow); cursor: pointer;">Sign Up</div>
+                <div class="flex-fill text-center py-2 rounded text-secondary" id="tabli" style="cursor: pointer;">Log In</div>
             </div>
 
             <form id="formsu" method="POST" action="{{ url_for('main.signup') }}">
