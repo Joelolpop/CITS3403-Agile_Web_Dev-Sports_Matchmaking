@@ -13,18 +13,24 @@
 		<div class="card border-success p-4 p-md-5" style="background: var(--background-nav);">
 			<h2 class="mb-4">EDIT PROFILE</h2>
 
-			<form id="user-profile-form">
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% for category, message in messages %}
+					<div class="alert alert-{{ category }} py-2">{{ message }}</div>
+				{% endfor %}
+			{% endwith %}
+
+			<form id="user-profile-form" method="POST" action="{{ url_for('main.profile') }}">
 				<label class="form-label text-secondary small">User Name</label>
-				<input class="form-control text-success bg-dark border-success mb-3" type="text" name="username" placeholder="Enter your user name">
+				<input class="form-control text-success bg-dark border-success mb-3" type="text" name="username" placeholder="Enter your user name" value="{{ user.username or '' }}">
 
 				<div class="row g-3 mb-1">
 					<div class="col-12 col-md-6">
 						<label class="form-label text-secondary small">First Name</label>
-						<input class="form-control text-success bg-dark border-success" type="text" name="first_name" placeholder="Enter your first name">
+						<input class="form-control text-success bg-dark border-success" type="text" name="first_name" placeholder="Enter your first name" value="{{ user.first_name or '' }}">
 					</div>
 					<div class="col-12 col-md-6">
 						<label class="form-label text-secondary small">Last Name</label>
-						<input class="form-control text-success bg-dark border-success" type="text" name="last_name" placeholder="Enter your last name">
+						<input class="form-control text-success bg-dark border-success" type="text" name="last_name" placeholder="Enter your last name" value="{{ user.last_name or '' }}">
 					</div>
 				</div>
 
@@ -32,15 +38,15 @@
 					<div class="col-12 col-md-6">
 						<label class="form-label text-secondary small">Gender</label>
 						<select class="form-select bg-dark border-success" name="gender">
-							<option disabled selected>Select gender</option>
-							<option>MALE</option>
-							<option>FEMALE</option>
-							<option>Others</option>
+							<option disabled {% if not user.gender %}selected{% endif %}>Select gender</option>
+							<option {% if user.gender == 'MALE' %}selected{% endif %}>MALE</option>
+							<option {% if user.gender == 'FEMALE' %}selected{% endif %}>FEMALE</option>
+							<option {% if user.gender == 'Others' %}selected{% endif %}>Others</option>
 						</select>
 					</div>
 					<div class="col-12 col-md-6">
 						<label class="form-label text-secondary small">Postcode</label>
-						<input class="form-control text-success bg-dark border-success" type="text" name="postcode" placeholder="e.g. 6009">
+						<input class="form-control text-success bg-dark border-success" type="text" name="postcode" placeholder="e.g. 6009" value="{{ user.postcode or '' }}">
 					</div>
 				</div>
 
@@ -57,7 +63,7 @@
 					<button type="button" class="btn btn-outline-success sport-chip" data-sport="Golf">Golf</button>
 				</div>
 				<div id="sport-count" class="form-text text-secondary mb-4">0 / 3 selected</div>
-				<input type="hidden" id="sport-hidden" name="sports">
+				<input type="hidden" id="sport-hidden" name="sports" value="{{ [user.sport_1, user.sport_2, user.sport_3] | select | join(',') }}">
 
 				<button type="submit" class="btn btn-success w-100 fw-semibold">Save Changes</button>
 			</form>
