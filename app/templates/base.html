@@ -24,6 +24,9 @@
         <a class="nav-link d-inline" href="/events">Events</a>
         <a class="nav-link d-inline" href="/friends">Friends</a>
         <a class="nav-link d-inline" href="/profile">Profile</a>
+        {% if current_user.is_authenticated %}
+        <a class="nav-link d-inline text-danger" href="{{ url_for('main.logout') }}">Log Out</a>
+        {% endif %}
     </div>
 </nav>
 
