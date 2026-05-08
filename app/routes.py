@@ -147,5 +147,13 @@ def event_edit(event_id):
     return render_template("event_edit.html", event_id=event_id)
 
 @main.route("/matching")
+@login_required
 def matching():
-    return render_template("matching.html")
+    existing_friends = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends_ids = {f.friend_id for f in existing_friends}
+    friends_ids.add(current_user.user_id)
+
+    candidates = Users.query.filter(Users.user_id.notin_(friends_ids)).all()
+    scored = sorted(candidates, key=lambda u: calculate_match_score(current_user, u))
+
+    return render_template("matching.html", matches=scored)
