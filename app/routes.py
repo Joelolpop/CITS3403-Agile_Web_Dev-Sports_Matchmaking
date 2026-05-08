@@ -20,7 +20,10 @@ def calculate_match_score(current_user, other_user):
     common_sports = len(current_sports & other_sports)
     sport_score = 3 - common_sports
 
-    postcode_score = abs(int(current_user.postcode) - int(other_user.postcode))
+    try:
+        postcode_score = abs(int(current_user.postcode) - int(other_user.postcode))
+    except (ValueError, TypeError):
+        postcode_score = 9999
 
     total_score = sport_score + postcode_score
     return total_score
