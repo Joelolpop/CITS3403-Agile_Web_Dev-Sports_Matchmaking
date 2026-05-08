@@ -5,6 +5,26 @@ from app.models import Users
 
 main = Blueprint('main', __name__)
 
+def calculate_match_score(current_user, other_user):
+    current_sports = set(filter(None, [
+        current_user.sport_1,
+        current_user.sport_2,
+        current_user.sport_3
+    ]))
+    other_sports = set(filter(None, [
+        other_user.sport_1,
+        other_user.sport_2,
+        other_user.sport_3
+    ]))
+
+    common_sports = len(current_sports & other_sports)
+    sport_score = 3 - common_sports
+
+    postcode_score = abs(int(current_user.postcode) - int(other_user.postcode))
+
+    total_score = sport_score + postcode_score
+    return total_score
+
 @main.route("/")
 def homepage():
     return render_template("homepage.html")
