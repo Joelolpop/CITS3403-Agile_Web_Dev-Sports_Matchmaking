@@ -1,14 +1,13 @@
+// Add event listeners for tab switching
+document.getElementById("tabsu").addEventListener("click", function() {
+    switchTab('su');
+});
 
-// Handle authentication actions (also switches to create event view after auth)
-function handleAuth(type) {
-    if (type === 'su') {
-        console.log('signing up...');
-    } else {
-        console.log('logging in...');
-    }
-    document.getElementById('auth-box').classList.add('d-none');
-    document.getElementById('create-box').classList.remove('d-none');
-}
+document.getElementById("tabli").addEventListener("click", function() {
+    switchTab('li');
+});
+
+
 
 //tab switcher-changes tab when pressing on signup or login
 function switchTab(tab) {

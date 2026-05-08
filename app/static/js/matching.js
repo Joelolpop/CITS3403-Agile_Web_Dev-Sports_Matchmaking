@@ -1,3 +1,16 @@
+//event listeners to buttons for connect and pass
+document.querySelectorAll(".connect-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        handleConnect(this);
+    });
+});
+
+document.querySelectorAll(".pass-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        handlePass(this);
+    });
+});
+
 function handleConnect(button) {
     const cardContainer = button.closest('.player-card-container');
     
