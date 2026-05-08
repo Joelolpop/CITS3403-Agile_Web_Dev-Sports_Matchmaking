@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import Users
+from app.models import Users, Matching, Friends
 
 main = Blueprint('main', __name__)
 
