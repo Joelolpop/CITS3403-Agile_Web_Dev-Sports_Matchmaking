@@ -128,4 +128,5 @@ def event_edit(event_id):
 
 @main.route("/matching")
 def matching():
-    return render_template("matching.html")
+    players = Users.query.all()
+    return render_template("matching.html", players=players)
