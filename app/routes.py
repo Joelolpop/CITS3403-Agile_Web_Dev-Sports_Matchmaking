@@ -1,10 +1,34 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import os
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
 from app import db
 from app.models import Users, Matching, Friends, Events, Attendees
 import datetime
 
 main = Blueprint('main', __name__)
+
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg"}
+
+PUBLIC_ENDPOINTS = {
+    "main.homepage",
+    "main.login",
+    "main.signup",
+}
+
+
+@main.before_app_request
+def require_login_for_protected_routes():
+    if current_user.is_authenticated:
+        return None
+
+    if request.endpoint is None:
+        return None
+
+    if request.endpoint.startswith("static") or request.endpoint in PUBLIC_ENDPOINTS:
+        return None
+
+    return redirect(url_for("main.homepage"))
 
 def calculate_match_score(current_user, other_user):
     current_sports = set(filter(None, [
@@ -28,6 +52,27 @@ def calculate_match_score(current_user, other_user):
 
     total_score = sport_score + postcode_score
     return total_score
+
+
+def parse_postcode(raw_postcode, required=True):
+    postcode = (raw_postcode or "").strip()
+
+    if not postcode:
+        if required:
+            return None, "Postcode is required."
+        return None, None
+
+    if not postcode.isdigit() or len(postcode) != 4:
+        return None, "Postcode must be exactly 4 digits."
+
+    return int(postcode), None
+
+
+def allowed_image_filename(filename):
+    if not filename:
+        return False
+    extension = os.path.splitext(filename)[1].lower()
+    return extension in ALLOWED_IMAGE_EXTENSIONS
 
 @main.route("/")
 def homepage():
@@ -92,9 +137,11 @@ def profile():
         first_name = request.form.get("first_name", "").strip()
         last_name  = request.form.get("last_name", "").strip()
         gender     = request.form.get("gender", "").strip() or None
-        postcode   = request.form.get("postcode", "").strip() or None
+        postcode_raw = request.form.get("postcode", "")
+        instagram  = request.form.get("instagram", "").strip() or None
         sports     = request.form.get("sports", "").split(",")
         sports     = [s.strip() for s in sports if s.strip()]
+        profile_image = request.files.get("profile_image")
 
         if not first_name or not last_name:
             flash("First and last name are required.", "danger")
@@ -106,11 +153,32 @@ def profile():
                 flash("That username is already taken.", "danger")
                 return redirect(url_for("main.profile"))
 
+        postcode, postcode_error = parse_postcode(postcode_raw, required=False)
+        if postcode_error:
+            flash(postcode_error, "danger")
+            return redirect(url_for("main.profile"))
+
+        if profile_image and profile_image.filename:
+            if not allowed_image_filename(profile_image.filename):
+                flash("Profile image must be a .jpg or .jpeg file.", "danger")
+                return redirect(url_for("main.profile"))
+
         user.username   = username
         user.first_name = first_name
         user.last_name  = last_name
         user.gender     = gender
         user.postcode   = postcode
+        user.instagram  = instagram
+
+        if profile_image and profile_image.filename:
+            filename = secure_filename(profile_image.filename)
+            upload_folder = os.path.join(current_app.root_path, "static", "uploads", "profiles")
+            os.makedirs(upload_folder, exist_ok=True)
+
+            stored_filename = f"user_{user.user_id}.jpg"
+            profile_image.save(os.path.join(upload_folder, stored_filename))
+            user.profile_image = f"uploads/profiles/{stored_filename}"
+
         user.sport_1    = sports[0] if len(sports) > 0 else None
         user.sport_2    = sports[1] if len(sports) > 1 else None
         user.sport_3    = sports[2] if len(sports) > 2 else None
@@ -141,13 +209,13 @@ def create_event():
     event_name  = request.form.get("event_name", "").strip()
     sport       = request.form.get("sport", "").strip()
     location    = request.form.get("location", "").strip()
-    postcode    = request.form.get("postcode", "").strip()
+    postcode_raw = request.form.get("postcode", "")
     description = request.form.get("description", "").strip()
     date_str    = request.form.get("date", "")
     time_str    = request.form.get("time", "")
     spots_total = request.form.get("spots_total", "")
 
-    if not all([event_name, sport, location, postcode, date_str, time_str, spots_total]):
+    if not all([event_name, sport, location, postcode_raw, date_str, time_str, spots_total]):
         flash("All fields except description are required.", "danger")
         return redirect(url_for("main.homepage"))
 
@@ -161,8 +229,9 @@ def create_event():
         flash("Invalid date, time, or spots value.", "danger")
         return redirect(url_for("main.homepage"))
     
-    if not postcode.isdigit() or len(postcode) != 4:
-        flash("Postcode must be exactly 4 digits.", "danger")
+    postcode, postcode_error = parse_postcode(postcode_raw, required=True)
+    if postcode_error:
+        flash(postcode_error, "danger")
         return redirect(url_for("main.homepage"))
 
     event = Events(
