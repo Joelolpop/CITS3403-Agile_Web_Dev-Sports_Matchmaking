@@ -76,9 +76,13 @@
                     value="{{ event.location }}">
  
                 <label class="form-label text-secondary small">Postcode</label>
-                <input
-                    class="form-control text-success bg-dark border-success mb-3"
-                    name="postcode"
+                <input class="form-control text-success bg-dark border-success mb-3" 
+                    name="postcode" 
+                    type="text" 
+                    inputmode="numeric" 
+                    maxlength="4" 
+                    pattern="[0-9]{4}" 
+                    title="Postcode must be exactly 4 digits" 
                     value="{{ event.postcode }}">
  
                 <label class="form-label text-secondary small">Description</label>
