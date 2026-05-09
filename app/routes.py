@@ -206,6 +206,27 @@ def event_view(event_id):
 
     return render_template("event_view.html", event=event, user_has_joined=user_has_joined)
 
+@main.route("/events/<int:event_id>/join")
+@login_required
+def event_join(event_id):
+    event = Events.query.get_or_404(event_id)
+
+    already_joined = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first()
+
+    attendee = Attendees(
+        event_id = event_id,
+        user_id  = current_user.user_id,
+        is_host  = False
+    )
+    db.session.add(attendee)
+    db.session.commit()
+
+    flash("You have joined the event!", "success")
+    return redirect(url_for("main.event_view", event_id=event_id))
+
 
 @main.route("/events/<int:event_id>/edit")
 def event_edit(event_id):
