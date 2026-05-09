@@ -160,6 +160,10 @@ def create_event():
     except ValueError:
         flash("Invalid date, time, or spots value.", "danger")
         return redirect(url_for("main.homepage"))
+    
+    if not postcode.isdigit() or len(postcode) != 4:
+        flash("Postcode must be exactly 4 digits.", "danger")
+        return redirect(url_for("main.homepage"))
 
     event = Events(
         owner_id    = current_user.user_id,
