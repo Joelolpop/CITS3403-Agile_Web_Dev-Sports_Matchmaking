@@ -196,8 +196,15 @@ def events_joined_available_alias():
 
 
 @main.route("/events/<int:event_id>")
+@login_required
 def event_view(event_id):
-    return render_template("event_view.html", event_id=event_id,user_has_joined=False)
+    event = Events.query.get_or_404(event_id)
+    user_has_joined = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first() is not None
+
+    return render_template("event_view.html", event=event, user_has_joined=user_has_joined)
 
 
 @main.route("/events/<int:event_id>/edit")
