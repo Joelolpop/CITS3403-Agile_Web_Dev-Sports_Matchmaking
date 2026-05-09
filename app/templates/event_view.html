@@ -7,7 +7,11 @@
 <div class="mb-4">
     <p class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.1em;">Event Details</p>
     <h2 class="fw-bold mb-0">
-        Viewing <span class="text-success">your</span>  event
+        {% if user_has_joined %}
+            Viewing <span class="text-success">your</span> event
+        {% else %}
+            Viewing this <span class="text-success">event</span>
+        {% endif %}
     </h2>
 </div>
 
