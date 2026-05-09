@@ -1,9 +1,32 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import Users
+from app.models import Users, Matching, Friends
 
 main = Blueprint('main', __name__)
+
+def calculate_match_score(current_user, other_user):
+    current_sports = set(filter(None, [
+        current_user.sport_1,
+        current_user.sport_2,
+        current_user.sport_3
+    ]))
+    other_sports = set(filter(None, [
+        other_user.sport_1,
+        other_user.sport_2,
+        other_user.sport_3
+    ]))
+
+    common_sports = len(current_sports & other_sports)
+    sport_score = 3 - common_sports
+
+    try:
+        postcode_score = abs(int(current_user.postcode) - int(other_user.postcode))
+    except (ValueError, TypeError):
+        postcode_score = 9999
+
+    total_score = sport_score + postcode_score
+    return total_score
 
 @main.route("/")
 def homepage():
@@ -127,6 +150,13 @@ def event_edit(event_id):
     return render_template("event_edit.html", event_id=event_id)
 
 @main.route("/matching")
+@login_required
 def matching():
-    players = Users.query.all()
-    return render_template("matching.html", players=players)
+    existing_friends = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends_ids = {f.friend_id for f in existing_friends}
+    friends_ids.add(current_user.user_id)
+
+    candidates = Users.query.filter(Users.user_id.notin_(friends_ids)).all()
+    scored = sorted(candidates, key=lambda u: calculate_match_score(current_user, u))
+
+    return render_template("matching.html", matches=scored)
