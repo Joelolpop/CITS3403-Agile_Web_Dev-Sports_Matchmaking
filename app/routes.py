@@ -196,8 +196,66 @@ def events_joined_available_alias():
 
 
 @main.route("/events/<int:event_id>")
+@login_required
 def event_view(event_id):
-    return render_template("event_view.html", event_id=event_id,user_has_joined=False)
+    event = Events.query.get_or_404(event_id)
+    user_has_joined = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first() is not None
+
+    return render_template("event_view.html", event=event, user_has_joined=user_has_joined)
+
+@main.route("/events/<int:event_id>/join")
+@login_required
+def event_join(event_id):
+    event = Events.query.get_or_404(event_id)
+
+    already_joined = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first()
+
+    if already_joined:
+        flash("You have already joined this event.", "warning")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    if event.spots_filled >= event.spots_total:
+        flash("This event is full.", "danger")
+        return redirect(url_for("main.event_view", event_id=event_id))
+    
+    attendee = Attendees(
+        event_id = event_id,
+        user_id  = current_user.user_id,
+        is_host  = False
+    )
+    db.session.add(attendee)
+    db.session.commit()
+
+    flash("You have joined the event!", "success")
+    return redirect(url_for("main.event_view", event_id=event_id))
+
+@main.route("/events/<int:event_id>/leave")
+@login_required
+def event_leave(event_id):
+    attendee = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first()
+
+    if not attendee:
+        flash("You are not part of this event.", "warning")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    if attendee.is_host:
+        flash("You are the host and cannot leave your own event.", "danger")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    db.session.delete(attendee)
+    db.session.commit()
+
+    flash("You have left the event.", "success")
+    return redirect(url_for("main.event_view", event_id=event_id))
 
 
 @main.route("/events/<int:event_id>/edit")

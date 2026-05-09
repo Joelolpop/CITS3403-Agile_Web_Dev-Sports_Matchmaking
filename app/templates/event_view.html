@@ -7,9 +7,19 @@
 <div class="mb-4">
     <p class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.1em;">Event Details</p>
     <h2 class="fw-bold mb-0">
-        Viewing <span class="text-success">your</span>  event
+        {% if user_has_joined %}
+            Viewing <span class="text-success">your</span> event
+        {% else %}
+            Viewing this <span class="text-success">event</span>
+        {% endif %}
     </h2>
 </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="alert alert-{{ category }} py-2 small">{{ message }}</div>
+  {% endfor %}
+{% endwith %}
 
 <div class="row g-4">
 
@@ -60,10 +70,10 @@
             </h5>
             <div class="d-flex flex-wrap gap-3 align-items-center">
 
-                {% for attendee in event.attendees %}
+                {% for attendee in event.members %}
                 <div class="d-flex align-items-center gap-2">
-                    <div class=>{{ attendee.name[0] }}</div>
-                    <span class="small">{{ attendee.name }}</span>
+                    <div class=>{{ attendee.user.first_name[0] }}</div>
+                    <span class="small">{{ attendee.user.first_name }} {{ attendee.user.last_name }}</span>
                     {% if attendee.is_host %}
                         <span class="badge text-success border border-success bg-transparent rounded-pill small">Host</span>
                     {% endif %}
@@ -97,9 +107,9 @@
             </div>
             {% if user_has_joined %}
                 <button class="btn btn-outline-success w-100 fw-semibold mb-2" disabled>✓ Joined</button>
-                <a href="/events/{{ event.id }}/leave" class="btn btn-outline-danger w-100 fw-semibold small">Leave event</a>
+                <a href="/events/{{ event.event_id }}/leave" class="btn btn-outline-danger w-100 fw-semibold small">Leave event</a>
             {% else %}
-                <a href="/events/{{ event.id }}/join" class="btn btn-success w-100 fw-semibold">Join Event</a>
+                <a href="/events/{{ event.event_id }}/join" class="btn btn-success w-100 fw-semibold">Join Event</a>
             {% endif %}
 
             

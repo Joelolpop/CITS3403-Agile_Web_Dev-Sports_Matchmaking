@@ -86,7 +86,9 @@ class Events(db.Model):
 
     @property
     def host(self):
-        return self.owner.username if self.owner else None
+        if self.owner:
+            return self.owner.username or self.owner.first_name
+        return "Unknown"
 
 class Attendees(db.Model):
     __tablename__ = 'attendees'
