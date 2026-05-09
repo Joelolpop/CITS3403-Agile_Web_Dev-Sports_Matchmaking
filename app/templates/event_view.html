@@ -111,7 +111,9 @@
             {% else %}
                 <a href="/events/{{ event.event_id }}/join" class="btn btn-success w-100 fw-semibold">Join Event</a>
             {% endif %}
-
+            {% if current_user.user_id == event.owner_id %}
+                <a href="/events/{{ event.event_id }}/edit" class="btn btn-outline-success w-100 fw-semibold mt-2">Edit Event</a>
+            {% endif %}
             
 
         </div>
