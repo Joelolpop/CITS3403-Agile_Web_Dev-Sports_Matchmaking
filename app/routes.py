@@ -227,6 +227,20 @@ def event_join(event_id):
     flash("You have joined the event!", "success")
     return redirect(url_for("main.event_view", event_id=event_id))
 
+@main.route("/events/<int:event_id>/leave")
+@login_required
+def event_leave(event_id):
+    attendee = Attendees.query.filter_by(
+        event_id=event_id,
+        user_id=current_user.user_id
+    ).first()
+
+    db.session.delete(attendee)
+    db.session.commit()
+
+    flash("You have left the event.", "success")
+    return redirect(url_for("main.event_view", event_id=event_id))
+
 
 @main.route("/events/<int:event_id>/edit")
 def event_edit(event_id):
