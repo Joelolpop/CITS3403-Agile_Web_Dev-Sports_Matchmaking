@@ -216,6 +216,14 @@ def event_join(event_id):
         user_id=current_user.user_id
     ).first()
 
+    if already_joined:
+        flash("You have already joined this event.", "warning")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    if event.spots_filled >= event.spots_total:
+        flash("This event is full.", "danger")
+        return redirect(url_for("main.event_view", event_id=event_id))
+    
     attendee = Attendees(
         event_id = event_id,
         user_id  = current_user.user_id,
@@ -234,6 +242,14 @@ def event_leave(event_id):
         event_id=event_id,
         user_id=current_user.user_id
     ).first()
+
+    if not attendee:
+        flash("You are not part of this event.", "warning")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    if attendee.is_host:
+        flash("You are the host and cannot leave your own event.", "danger")
+        return redirect(url_for("main.event_view", event_id=event_id))
 
     db.session.delete(attendee)
     db.session.commit()
