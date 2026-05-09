@@ -376,6 +376,21 @@ def event_edit(event_id):
 
     return render_template("event_edit.html", event=event)
 
+@main.route("/events/<int:event_id>/delete", methods=["POST"])
+@login_required
+def event_delete(event_id):
+    event = Events.query.get_or_404(event_id)
+
+    if event.owner_id != current_user.user_id:
+        flash("You are not the host of this event.", "danger")
+        return redirect(url_for("main.event_view", event_id=event_id))
+
+    db.session.delete(event)
+    db.session.commit()
+
+    flash("Event deleted.", "success")
+    return redirect(url_for("main.homepage"))
+
 @main.route("/matching")
 @login_required
 def matching():
