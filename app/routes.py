@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import Users, Matching, Friends
+from app.models import Users, Matching, Friends, Events, Attendees
+import datetime
 
 main = Blueprint('main', __name__)
 
@@ -133,6 +134,56 @@ def friend_data():
 def events_joined_available():
     return render_template(
         "event_joined_available.html")
+
+@main.route("/events/create", methods=["POST"])
+@login_required
+def create_event():
+    event_name  = request.form.get("event_name", "").strip()
+    sport       = request.form.get("sport", "").strip()
+    location    = request.form.get("location", "").strip()
+    postcode    = request.form.get("postcode", "").strip()
+    description = request.form.get("description", "").strip()
+    date_str    = request.form.get("date", "")
+    time_str    = request.form.get("time", "")
+    spots_total = request.form.get("spots_total", "")
+
+    if not all([event_name, sport, location, postcode, date_str, time_str, spots_total]):
+        flash("All fields except description are required.", "danger")
+        return redirect(url_for("main.homepage"))
+
+    try:
+        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        time = datetime.datetime.strptime(time_str, "%H:%M").time()
+        spots_total = int(spots_total)
+        if spots_total < 1:
+            raise ValueError
+    except ValueError:
+        flash("Invalid date, time, or spots value.", "danger")
+        return redirect(url_for("main.homepage"))
+
+    event = Events(
+        owner_id    = current_user.user_id,
+        event_name  = event_name,
+        sport       = sport,
+        location    = location,
+        postcode    = postcode,
+        description = description,
+        date        = date,
+        time        = time,
+        spots_total = spots_total
+    )
+    db.session.add(event)
+    db.session.flush()
+
+    host = Attendees(
+        event_id = event.event_id,
+        user_id  = current_user.user_id,
+        is_host  = True
+    )
+    db.session.add(host)
+    db.session.commit()
+
+    return redirect(url_for("main.event_view", event_id=event.event_id))
 
 
 @main.route("/events/joined-available")
