@@ -70,7 +70,7 @@
             </h5>
             <div class="d-flex flex-wrap gap-3 align-items-center">
 
-                {% for attendee in event.attendees %}
+                {% for attendee in event.members %}
                 <div class="d-flex align-items-center gap-2">
                     <div class=>{{ attendee.user.first_name[0] }}</div>
                     <span class="small">{{ attendee.user.first_name }} {{ attendee.user.last_name }}</span>
