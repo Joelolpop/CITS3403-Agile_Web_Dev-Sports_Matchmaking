@@ -50,7 +50,7 @@
     
     <div class="flex-fill">
 
-        
+        {% if not current_user.is_authenticated %}
         <div class="card border-success p-4" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Join MatchUp</h2>
             <p>Sign up or log in to start matching.</p>
@@ -62,7 +62,7 @@
             {% endwith %}
 
             <div class="d-flex border border-success rounded p-1 mb-4" style="background: var(--background-base);">
-                <div class="flex-fill text-center py-2 rounded text-success border border-success fw-semibold"id="tabsu" style="background: var(--green-glow); cursor: pointer;">Sign Up</div>
+                <div class="flex-fill text-center py-2 rounded text-success border border-success fw-semibold" id="tabsu" style="background: var(--green-glow); cursor: pointer;">Sign Up</div>
                 <div class="flex-fill text-center py-2 rounded text-secondary" id="tabli" style="cursor: pointer;">Log In</div>
             </div>
 
@@ -93,51 +93,61 @@
             </form>
         </div>
 
-        
-        <div class="card border-success p-4 d-none" id="create-box" style="max-width: 480px; background: var(--background-nav);">
+        {% else %}
+        <div class="card border-success p-4" id="create-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Create an event!</h2>
-            <p id="welcome">What are you playing?</p>
-            <label class="form-label text-secondary small">Event name</label>
-            <input class="form-control text-success bg-dark border-success mb-3" placeholder="e.g. Tennis at UWA">
-            <div class="row g-3 mb-2">
-                <div class="col">
-                    <label class="form-label text-secondary small">Sport</label>
-                    <select class="form-select bg-dark border-success">
-                        <option disabled selected>Choose</option>
-                        <option>Soccer</option>
-                        <option>Basketball</option>
-                        <option>Tennis</option>
-                        <option>Netball</option>
-                        <option>Cricket</option>
-                        <option>Australian Rules Football</option>
-                        <option>Swimming</option>
-                        <option>Rugby</option>
-                        <option>Golf</option>
-                    </select>
+            <p id="welcome">What are you playing, {{ current_user.first_name }}?</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} py-2 small">{{ message }}</div>
+              {% endfor %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('main.create_event') }}">
+                <label class="form-label text-secondary small">Event name</label>
+                <input class="form-control text-success bg-dark border-success mb-3" name="event_name" placeholder="e.g. Tennis at UWA" required>
+                <div class="row g-3 mb-2">
+                    <div class="col">
+                        <label class="form-label text-secondary small">Sport</label>
+                        <select class="form-select bg-dark border-success text-success" name="sport" required>
+                            <option disabled selected>Choose</option>
+                            <option>Soccer</option>
+                            <option>Basketball</option>
+                            <option>Tennis</option>
+                            <option>Netball</option>
+                            <option>Cricket</option>
+                            <option>Australian Rules Football</option>
+                            <option>Swimming</option>
+                            <option>Rugby</option>
+                            <option>Golf</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-secondary small">Spots</label>
+                        <input class="form-control text-success bg-dark border-success" name="spots_total" type="number" min="1" placeholder="10" required>
+                    </div>
                 </div>
-                <div class="col">
-                    <label class="form-label text-secondary small">Spots</label>
-                    <input class="form-control text-success bg-dark border-success" type="number" min="1" placeholder="10">
+                <div class="row g-3 mb-2">
+                    <div class="col">
+                        <label class="form-label text-secondary small">Date</label>
+                        <input class="form-control text-success bg-dark border-success" name="date" type="date" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label text-secondary small">Time</label>
+                        <input class="form-control text-success bg-dark border-success" name="time" type="time" required>
+                    </div>
                 </div>
-            </div>
-            <div class="row g-3 mb-2">
-                <div class="col">
-                    <label class="form-label text-secondary small">Date</label>
-                    <input class="form-control text-success bg-dark border-success" type="date">
-                </div>
-                <div class="col">
-                    <label class="form-label text-secondary small">Time</label>
-                    <input class="form-control text-success bg-dark border-success" type="time">
-                </div>
-            </div>
-            <label class="form-label text-secondary small">Location</label>
-            <input class="form-control text-success bg-dark border-success mb-3" placeholder="e.g. Nedlands">
-            <label class="form-label text-secondary small">Postcode</label>
-            <input class="form-control text-success bg-dark border-success mb-3" placeholder="e.g. 6009">
-            <label class="form-label text-secondary small">Description</label>
-            <textarea class="form-control text-success bg-dark border-success mb-3" placeholder="Any extra details..."></textarea>
-            <button class="btn btn-success w-100 fw-semibold">Create Event </button>
+                <label class="form-label text-secondary small">Location</label>
+                <input class="form-control text-success bg-dark border-success mb-3" name="location" placeholder="e.g. Nedlands" required>
+                <label class="form-label text-secondary small">Postcode</label>
+                <input class="form-control text-success bg-dark border-success mb-3" name="postcode" placeholder="e.g. 6009" required>
+                <label class="form-label text-secondary small">Description</label>
+                <textarea class="form-control text-success bg-dark border-success mb-3" name="description" placeholder="Any extra details..."></textarea>
+                <button type="submit" class="btn btn-success w-100 fw-semibold">Create Event</button>
+            </form>
         </div>
+        {% endif %}
 
     </div>
 </div>
