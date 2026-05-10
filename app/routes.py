@@ -212,6 +212,19 @@ def friend_search():
                    query in (f.sport_2 or "").lower() or
                    query in (f.sport_3 or "").lower()
                 ]
+    
+    results = []
+    for f in friends:
+        sports = [s for s in [f.sport_1, f.sport_2, f.sport_3] if s]
+        results.append({
+            "user_id": f.user_id,
+            "username": f.username or f"{f.first_name} {f.last_name}",
+            "first_name": f.first_name,
+            "last_name": f.last_name,
+            "sports": sports,
+        })
+    
+    return {"results": results}
 
 @main.route("/friends/data")
 def friend_data():
