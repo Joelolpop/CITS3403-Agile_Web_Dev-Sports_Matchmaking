@@ -10,6 +10,18 @@ env/
 # VS Code settings
 .vscode/
 
+# Database
+app.db
+*.sqlite3
+instance/
+
+# Environment Variables
+.env
+.flaskenv
+
+# Uploads (user profile images)
+app/static/uploads/
+
 # Mac junk
 .DS_Store
 
