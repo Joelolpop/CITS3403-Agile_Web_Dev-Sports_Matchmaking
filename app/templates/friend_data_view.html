@@ -16,7 +16,16 @@
             
             <div class="text-center mb-4">
                 <div class="rounded-circle bg-dark border border-success d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                    <!-- Placeholder for profile picture, can be replaced with an <img> tag if available -->
+                    {% if friend.profile_image %}
+                        <img
+                            src="{{ url_for('static', filename=friend.profile_image) }}"
+                            alt="{{ friend.first_name }} {{ friend.last_name }} profile picture"
+                            class="w-100 h-100 rounded-circle"
+                            style="object-fit: cover;"
+                        >
+                    {% else %}
+                        <span class="text-success fw-bold">{{ friend.first_name[0]|upper }}</span>
+                    {% endif %}
                 </div>
                 <h2 class="mb-1 text-success">{{ friend.username }}</h2>
             </div>
@@ -36,6 +45,10 @@
                     <label class="form-label text-secondary small d-block">Gender</label>
                     <p class="fs-5 text-success">{{ friend.gender }}</p>
                 </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-secondary small d-block">Instagram/Phone-number</label>
+                    <p class="fs-5 text-success">{{ friend.instagram or 'Not shared yet' }}</p>
+                </div>
             </div>
 
             <div class="mt-4">
@@ -53,7 +66,7 @@
                 <div class="col-12">
                     <button type="button" 
                             id="removeFriendBtn" 
-                            data-friend-id="{{ friend.id }}"
+                            data-friend-id="{{ friend.user_id }}"
                             data-friend-url="{{ url_for('main.friends_list') }}" 
                             class="btn btn-outline-danger w-100 fw-semibold">
                         Remove Friend
