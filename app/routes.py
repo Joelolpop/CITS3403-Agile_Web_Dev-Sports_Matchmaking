@@ -190,10 +190,19 @@ def profile():
     return render_template("user_profile_edit.html", user=user)
 
 @main.route("/friends")
+@login_required
 def friends_list():
     friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
     friends = [f.friend for f in friends_records]
     return render_template("friends_list.html", friends=friends)
+
+@main.route("/friends/search")
+@login_required
+def friend_search():
+    query = request.args.get("q", "").strip().lower()
+    friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends = [f.friend for f in friends_records]
+    
 
 @main.route("/friends/data")
 def friend_data():
