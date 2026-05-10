@@ -225,6 +225,38 @@ def friends_list():
         outgoing_requests=outgoing_requests,
     )
 
+@main.route("/friends/search")
+@login_required
+def friend_search():
+    query = request.args.get("q", "").strip().lower()
+    friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends = [f.friend for f in friends_records]
+
+    if query:
+        friends = [f for f in friends if
+                   query in (f.first_name or "").lower() or
+                   query in (f.last_name or "").lower() or
+                   query in (f.username or "").lower() or
+                   query in (f.sport_1 or "").lower() or
+                   query in (f.sport_2 or "").lower() or
+                   query in (f.sport_3 or "").lower()
+                ]
+    
+    results = []
+    for f in friends:
+        sports = [s for s in [f.sport_1, f.sport_2, f.sport_3] if s]
+        results.append({
+            "user_id": f.user_id,
+            "username": f.username or f"{f.first_name} {f.last_name}",
+            "postcode": f.postcode,
+            "first_name": f.first_name,
+            "last_name": f.last_name,
+            "sports": sports,
+        })
+    
+    return jsonify({"friends": results})
+
+
 @main.route("/friends/request", methods=["POST"])
 @login_required
 def send_friend_request():
