@@ -68,11 +68,11 @@
 
             <form id="formsu" method="POST" action="{{ url_for('main.signup') }}">
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">First name</label>
                         <input class="form-control text-success bg-dark border-success" name="first_name" placeholder="pibble" required>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Last name</label>
                         <input class="form-control text-success bg-dark border-success" name="last_name" placeholder="Thedestroyer" required>
                     </div>
@@ -108,7 +108,7 @@
                 <label class="form-label text-secondary small">Event name</label>
                 <input class="form-control text-success bg-dark border-success mb-3" name="event_name" placeholder="e.g. Tennis at UWA" required>
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Sport</label>
                         <select class="form-select bg-dark border-success text-success" name="sport" required>
                             <option disabled selected>Choose</option>
@@ -123,17 +123,17 @@
                             <option>Golf</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Spots</label>
                         <input class="form-control text-success bg-dark border-success" name="spots_total" type="number" min="1" placeholder="10" required>
                     </div>
                 </div>
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Date</label>
                         <input class="form-control text-success bg-dark border-success" name="date" type="date" required>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Time</label>
                         <input class="form-control text-success bg-dark border-success" name="time" type="time" required>
                     </div>
