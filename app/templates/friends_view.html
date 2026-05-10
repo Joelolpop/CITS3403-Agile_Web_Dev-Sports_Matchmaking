@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
 <div class="py-4">
     <h1>Your <span class="text-success">Friends</span></h1>
 </div>
 
-<div class="row g-4">
+<div class="mb-4">
+    <input type="text" id="friendSearch" class="form-control bg-dark text-success border border-success" 
+           placeholder="Search friends by username or sport...">
+</div>
+
+<div class="row g-4" id="friendsList">
     {% for friend in friends %}
     <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
@@ -20,19 +27,24 @@
                 <div class="mb-3">
                     <label class="small text-secondary d-block mb-1">Sports:</label>
                     <div class="d-flex flex-wrap gap-1">
-                        {% for sport in friend.sports %}
-                        <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
-                            {{ sport }}
-                        </span>
+                        {% for sport in [friend.sport_1, friend.sport_2, friend.sport_3] %}
+                            {% if sport %}
+                                <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
+                                    {{ sport }}
+                                </span>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
 
-                <a href="{{ url_for('main.friend_data', friend_id=friend.id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                <a href="{{ url_for('main.friend_data', friend_id=friend.user_id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
 
+<p id="noResults" class="text-secondary mt-4" style="display: none;">No friends found.</p>
+
+<script src="{{ url_for('static', filename='js/friends_view.js') }}"></script>
 {% endblock %}

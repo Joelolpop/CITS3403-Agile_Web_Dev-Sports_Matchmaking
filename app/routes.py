@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
@@ -190,8 +190,42 @@ def profile():
     return render_template("user_profile_edit.html", user=user)
 
 @main.route("/friends")
+@login_required
 def friends_list():
-    return render_template("friends_view.html")
+    friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends = [f.friend for f in friends_records]
+    return render_template("friends_view.html", friends=friends)
+
+@main.route("/friends/search")
+@login_required
+def friend_search():
+    query = request.args.get("q", "").strip().lower()
+    friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends = [f.friend for f in friends_records]
+
+    if query:
+        friends = [f for f in friends if
+                   query in (f.first_name or "").lower() or
+                   query in (f.last_name or "").lower() or
+                   query in (f.username or "").lower() or
+                   query in (f.sport_1 or "").lower() or
+                   query in (f.sport_2 or "").lower() or
+                   query in (f.sport_3 or "").lower()
+                ]
+    
+    results = []
+    for f in friends:
+        sports = [s for s in [f.sport_1, f.sport_2, f.sport_3] if s]
+        results.append({
+            "user_id": f.user_id,
+            "username": f.username or f"{f.first_name} {f.last_name}",
+            "postcode": f.postcode,
+            "first_name": f.first_name,
+            "last_name": f.last_name,
+            "sports": sports,
+        })
+    
+    return jsonify({"friends": results})
 
 @main.route("/friends/data")
 def friend_data():
