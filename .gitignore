@@ -11,7 +11,7 @@ env/
 .vscode/
 
 # Database
-app.db
+app/app.db
 *.sqlite3
 instance/
 
