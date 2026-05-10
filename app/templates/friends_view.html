@@ -25,15 +25,17 @@
                 <div class="mb-3">
                     <label class="small text-secondary d-block mb-1">Sports:</label>
                     <div class="d-flex flex-wrap gap-1">
-                        {% for sport in friend.sports %}
-                        <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
-                            {{ sport }}
-                        </span>
+                        {% for sport in [friend.sport_1, friend.sport_2, friend.sport_3] %}
+                            {% if sport %}
+                                <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
+                                    {{ sport }}
+                                </span>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
 
-                <a href="{{ url_for('main.friend_data', friend_id=friend.id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                <a href="{{ url_for('main.friend_data', friend_id=friend.user_id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
             </div>
         </div>
     </div>
