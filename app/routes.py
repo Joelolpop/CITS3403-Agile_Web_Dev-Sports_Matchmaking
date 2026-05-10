@@ -199,9 +199,44 @@ def friend_data():
 
 
 @main.route("/events")
+@login_required
 def events_joined_available():
+    
+    joined = Attendees.query.filter_by(user_id=current_user.user_id).all()
+    joined_event_ids = set()
+    events_joined = []
+    for a in joined:
+        joined_event_ids.add(a.event_id)
+        events_joined.append(a.event)
+
+    user_sports = set(filter(None, [
+        current_user.sport_1,
+        current_user.sport_2,
+        current_user.sport_3
+    ]))
+
+    events_available = Events.query.filter(
+        Events.event_id.notin_(joined_event_ids)
+    ).all()
+
+    def event_score(event):
+        if event.sport in user_sports:
+            sport_score = 0
+        else:
+            sport_score = 1
+        if current_user.postcode and event.postcode:
+            postcode_score = abs(current_user.postcode - event.postcode)
+        else:
+            postcode_score = 9999
+        return (sport_score, postcode_score)
+
+    events_available = sorted(events_available, key=event_score)[:10]
+
     return render_template(
-        "event_joined_available.html")
+        "event_joined_available.html",
+        events_joined=events_joined,
+        events_available=events_available
+    )
 
 @main.route("/events/create", methods=["POST"])
 @login_required
