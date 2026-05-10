@@ -191,7 +191,9 @@ def profile():
 
 @main.route("/friends")
 def friends_list():
-    return render_template("friends_view.html")
+    friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friends = [f.friend for f in friends_records]
+    return render_template("friends_list.html", friends=friends)
 
 @main.route("/friends/data")
 def friend_data():
