@@ -202,7 +202,16 @@ def friend_search():
     query = request.args.get("q", "").strip().lower()
     friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
     friends = [f.friend for f in friends_records]
-    
+
+    if query:
+        friends = [f for f in friends if
+                   query in (f.first_name or "").lower() or
+                   query in (f.last_name or "").lower() or
+                   query in (f.username or "").lower() or
+                   query in (f.sport_1 or "").lower() or
+                   query in (f.sport_2 or "").lower() or
+                   query in (f.sport_3 or "").lower()
+                ]
 
 @main.route("/friends/data")
 def friend_data():
