@@ -219,6 +219,7 @@ def friend_search():
         results.append({
             "user_id": f.user_id,
             "username": f.username or f"{f.first_name} {f.last_name}",
+            "postcode": f.postcode,
             "first_name": f.first_name,
             "last_name": f.last_name,
             "sports": sports,
