@@ -28,27 +28,25 @@ searchInput.addEventListener('input', function() {
                     ).join(' ');
 
                     friendsList.innerHTML += `
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div>
-                                            <h5 class="mb-0 text-white">${friend.username}</h5>
-                                            <small class="text-secondary">${friend.postcode}</small>
-                                        </div>
+                        <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div>
+                                        <h5 class="mb-0 text-white">${friend.username || friend.first_name}</h5>
+                                        <small class="text-secondary">${friend.postcode || "No postcode"}</small>
                                     </div>
-
-                                    <div class="mb-3">
-                                        <label class="small text-secondary d-block mb-1">Sports:</label>
-                                        <div class="d-flex flex-wrap gap-1">
-                                            ${sports}
-                                        </div>
-                                    </div>
-
-                                    <a href="/friends/${friend.user_id}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-secondary d-block mb-1">Sports:</label>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        ${sports || '<span class="text-secondary small">No sports selected.</span>'}
+                                    </div>
+                                </div>
+
+                                <a href="{{ url_for('main.friend_data', friend_id=friend.user_id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
                             </div>
-                        </div>`;
+                        </div>`
                 });
             })
             .catch(error => 
