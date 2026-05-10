@@ -7,6 +7,11 @@
     <h1>Your <span class="text-success">Friends</span></h1>
 </div>
 
+<div class="mb-4">
+    <input type="text" id="friendSearch" class="form-control bg-dark text-success border border-success" 
+           placeholder="Search friends by username or sport...">
+</div>
+
 <div class="row g-4 align-items-start">
     <div class="col-12 col-xl-8">
         <div class="card border-success shadow-sm mb-4" style="background: var(--background-nav);">
@@ -63,7 +68,7 @@
             {% endif %}
 
             {% for friend in friends %}
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-6"  id="friendsList">
                 <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
@@ -144,7 +149,7 @@
     </div>
 </div>
 
-<p id="noResults" class="text-secondary mt-4" style="display: none;">No friends found.</p>
+<p id="noResults" class="text-secondary mt-4" style="display: none; font-size: large;">No friends found.</p>
 
 <script src="{{ url_for('static', filename='js/friends_view.js') }}"></script>
 {% endblock %}
