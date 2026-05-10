@@ -32,6 +32,10 @@ class Users(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    @property
+    def sports(self):
+        return [sport for sport in [self.sport_1, self.sport_2, self.sport_3] if sport]
+
 class Matching(db.Model):
     __tablename__ = 'matching'
 
@@ -59,6 +63,19 @@ class Friends(db.Model):
     friend_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     user   = db.relationship('Users', foreign_keys=[user_id])
     friend = db.relationship('Users', foreign_keys=[friend_id])
+
+
+class FriendRequest(db.Model):
+    __tablename__ = 'friend_requests'
+
+    id           = db.Column(db.Integer, primary_key=True)
+    requester_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    receiver_id  = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    status       = db.Column(db.String(16), nullable=False, default='pending')
+    created_at   = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+
+    requester = db.relationship('Users', foreign_keys=[requester_id])
+    receiver  = db.relationship('Users', foreign_keys=[receiver_id])
 
 
 class Events(db.Model):
