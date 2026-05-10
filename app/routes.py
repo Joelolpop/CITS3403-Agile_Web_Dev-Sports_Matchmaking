@@ -1,9 +1,10 @@
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy import or_
 from werkzeug.utils import secure_filename
 from app import db
-from app.models import Users, Matching, Friends, Events, Attendees
+from app.models import Users, Matching, Friends, FriendRequest, Events, Attendees
 import datetime
 
 main = Blueprint('main', __name__)
@@ -73,6 +74,17 @@ def allowed_image_filename(filename):
         return False
     extension = os.path.splitext(filename)[1].lower()
     return extension in ALLOWED_IMAGE_EXTENSIONS
+
+
+def are_friends(user_id, other_user_id):
+    return Friends.query.filter_by(user_id=user_id, friend_id=other_user_id).first() is not None
+
+
+def create_friend_pair(user_a_id, user_b_id):
+    if not are_friends(user_a_id, user_b_id):
+        db.session.add(Friends(user_id=user_a_id, friend_id=user_b_id))
+    if not are_friends(user_b_id, user_a_id):
+        db.session.add(Friends(user_id=user_b_id, friend_id=user_a_id))
 
 @main.route("/")
 def homepage():
@@ -190,12 +202,114 @@ def profile():
     return render_template("user_profile_edit.html", user=user)
 
 @main.route("/friends")
+@login_required
 def friends_list():
-    return render_template("friends_view.html")
+    friendships = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friend_ids = [f.friend_id for f in friendships]
+    friends = Users.query.filter(Users.user_id.in_(friend_ids)).all() if friend_ids else []
 
-@main.route("/friends/data")
-def friend_data():
-    return render_template("friend_data_view.html")
+    pending_requests = FriendRequest.query.filter_by(
+        receiver_id=current_user.user_id,
+        status="pending"
+    ).order_by(FriendRequest.created_at.desc()).all()
+
+    outgoing_requests = FriendRequest.query.filter_by(
+        requester_id=current_user.user_id,
+        status="pending"
+    ).order_by(FriendRequest.created_at.desc()).all()
+
+    return render_template(
+        "friends_view.html",
+        friends=friends,
+        pending_requests=pending_requests,
+        outgoing_requests=outgoing_requests,
+    )
+
+@main.route("/friends/request", methods=["POST"])
+@login_required
+def send_friend_request():
+    payload = request.get_json(silent=True) or {}
+    receiver_id = payload.get("receiver_id")
+
+    try:
+        receiver_id = int(receiver_id)
+    except (TypeError, ValueError):
+        return jsonify({"ok": False, "message": "Invalid user."}), 400
+
+    if receiver_id == current_user.user_id:
+        return jsonify({"ok": False, "message": "You cannot send a request to yourself."}), 400
+
+    receiver = Users.query.get(receiver_id)
+    if not receiver:
+        return jsonify({"ok": False, "message": "User not found."}), 404
+
+    if are_friends(current_user.user_id, receiver_id):
+        return jsonify({"ok": False, "message": "You are already friends."}), 400
+
+    existing_request = FriendRequest.query.filter(
+        or_(
+            (FriendRequest.requester_id == current_user.user_id) & (FriendRequest.receiver_id == receiver_id),
+            (FriendRequest.requester_id == receiver_id) & (FriendRequest.receiver_id == current_user.user_id),
+        ),
+        FriendRequest.status == "pending"
+    ).first()
+
+    if existing_request:
+        return jsonify({"ok": False, "message": "A pending request already exists."}), 400
+
+    friend_request = FriendRequest(
+        requester_id=current_user.user_id,
+        receiver_id=receiver_id,
+        status="pending"
+    )
+    db.session.add(friend_request)
+    db.session.commit()
+
+    return jsonify({"ok": True})
+
+
+@main.route("/friends/request/<int:request_id>/accept", methods=["POST"])
+@login_required
+def accept_friend_request(request_id):
+    friend_request = FriendRequest.query.get_or_404(request_id)
+
+    if friend_request.receiver_id != current_user.user_id or friend_request.status != "pending":
+        flash("That request is no longer available.", "warning")
+        return redirect(url_for("main.friends_list"))
+
+    create_friend_pair(friend_request.requester_id, friend_request.receiver_id)
+    friend_request.status = "accepted"
+    db.session.commit()
+
+    flash("Friend request accepted.", "success")
+    return redirect(url_for("main.friends_list"))
+
+
+@main.route("/friends/request/<int:request_id>/reject", methods=["POST"])
+@login_required
+def reject_friend_request(request_id):
+    friend_request = FriendRequest.query.get_or_404(request_id)
+
+    if friend_request.receiver_id != current_user.user_id or friend_request.status != "pending":
+        flash("That request is no longer available.", "warning")
+        return redirect(url_for("main.friends_list"))
+
+    friend_request.status = "rejected"
+    db.session.commit()
+
+    flash("Friend request rejected.", "info")
+    return redirect(url_for("main.friends_list"))
+
+
+@main.route("/friends/<int:friend_id>")
+@login_required
+def friend_data(friend_id):
+    if not are_friends(current_user.user_id, friend_id):
+        flash("That profile is not available.", "danger")
+        return redirect(url_for("main.friends_list"))
+
+    friend = Users.query.get_or_404(friend_id)
+    return render_template("friend_data_view.html", friend=friend)
 
 
 @main.route("/events")
@@ -432,6 +546,20 @@ def matching():
     existing_friends = Friends.query.filter_by(user_id=current_user.user_id).all()
     friends_ids = {f.friend_id for f in existing_friends}
     friends_ids.add(current_user.user_id)
+
+    blocked_pairs = FriendRequest.query.filter(
+        FriendRequest.status == "pending",
+        or_(
+            FriendRequest.requester_id == current_user.user_id,
+            FriendRequest.receiver_id == current_user.user_id,
+        )
+    ).all()
+
+    for pair in blocked_pairs:
+        if pair.requester_id == current_user.user_id:
+            friends_ids.add(pair.receiver_id)
+        else:
+            friends_ids.add(pair.requester_id)
 
     candidates = Users.query.filter(Users.user_id.notin_(friends_ids)).all()
     scored = sorted(candidates, key=lambda u: calculate_match_score(current_user, u))
