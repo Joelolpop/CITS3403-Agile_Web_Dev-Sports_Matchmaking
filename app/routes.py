@@ -194,7 +194,7 @@ def profile():
 def friends_list():
     friends_records = Friends.query.filter_by(user_id=current_user.user_id).all()
     friends = [f.friend for f in friends_records]
-    return render_template("friends_list.html", friends=friends)
+    return render_template("friends_view.html", friends=friends)
 
 @main.route("/friends/search")
 @login_required
