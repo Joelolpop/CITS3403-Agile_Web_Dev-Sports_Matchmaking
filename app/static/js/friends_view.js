@@ -1,17 +1,17 @@
-const searhInput = document.getElementById('friendSearch');
+const searchInput = document.getElementById('friendSearch');
 const friendsList = document.getElementById('friendsList');
 const noResults = document.getElementById('noResults');
 
-let setTimeout = null;
+let searchTimeout = null;
 
 searchInput.addEventListener('input', function() {
-    clearTimeout(setTimeout);
+    clearTimeout(searchTimeout);
 
     searchTimeout = setTimeout(() => {
         const query = searchInput.value.trim();
 
         fetch(`/friends/search?q=${encodeURIComponent(query)}`)
-            .then(response => response.json()
+            .then(response => response.json())
             .then(data => {
                 friendsList.innerHTML = '';
 
@@ -45,13 +45,13 @@ searchInput.addEventListener('input', function() {
                                         </div>
                                     </div>
 
-                                    <a href="/friends/${friend.id}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                                    <a href="/friends/${friend.user_id}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
                                 </div>
                             </div>
                         </div>`;
                 });
             })
             .catch(error => 
-                console.error('Search error:', error)));
+                console.error('Search error:', error));
     }, 300);
 });
