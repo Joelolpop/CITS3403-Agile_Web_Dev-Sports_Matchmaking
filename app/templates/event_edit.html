@@ -22,7 +22,7 @@
                     value="{{ event.event_name }}">
  
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Sport</label>
                         <select class="form-select bg-dark border-success text-success" name="sport">
                             <option disabled>Choose</option>
@@ -37,7 +37,7 @@
                             <option {% if event.sport == 'Golf' %}selected{% endif %}>Golf</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Spots</label>
                         <input
                             class="form-control text-success bg-dark border-success"
@@ -49,7 +49,7 @@
                 </div>
  
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Date</label>
                         <input
                             class="form-control text-success bg-dark border-success"
@@ -57,7 +57,7 @@
                             name="date"
                             value="{{ event.date }}">
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Time</label>
                         <input
                             class="form-control text-success bg-dark border-success"
