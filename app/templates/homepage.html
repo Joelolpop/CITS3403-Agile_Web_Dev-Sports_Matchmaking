@@ -51,7 +51,7 @@
     <div class="flex-fill w-100">
 
         {% if not current_user.is_authenticated %}
-        <div class="card border-success p-4" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
+        <div class="card border-success p-4 w-100" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Join MatchUp</h2>
             <p>Sign up or log in to start matching.</p>
 
@@ -94,7 +94,7 @@
         </div>
 
         {% else %}
-        <div class="card border-success p-4" id="create-box" style="max-width: 480px; background: var(--background-nav);">
+        <div class="card border-success p-4 w-100" id="create-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Create an event!</h2>
             <p id="welcome">What are you playing, {{ current_user.first_name }}?</p>
 
