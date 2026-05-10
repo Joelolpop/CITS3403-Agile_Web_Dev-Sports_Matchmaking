@@ -224,7 +224,7 @@ def friend_search():
             "sports": sports,
         })
     
-    return {"results": results}
+    return {"friends": results}
 
 @main.route("/friends/data")
 def friend_data():
