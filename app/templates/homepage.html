@@ -41,17 +41,17 @@
     </div>
 </div>
 
-<div class="d-flex align-items-center justify-content-between gap-4 py-5">
-    <div class="flex-fill">
+<div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4 py-5">
+    <div class="flex-fill w-100">
         <p class="text-secondary small text-uppercase mb-3">— GET STARTED</p>
         <h1>READY TO <span class="text-success">PLAY?</span></h1>
         <p>Connect with players and <span class="text-success">IMPROVE</span> together!</p>
     </div>
     
-    <div class="flex-fill">
+    <div class="flex-fill w-100">
 
         {% if not current_user.is_authenticated %}
-        <div class="card border-success p-4" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
+        <div class="card border-success p-4 w-100" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Join MatchUp</h2>
             <p>Sign up or log in to start matching.</p>
 
@@ -68,11 +68,11 @@
 
             <form id="formsu" method="POST" action="{{ url_for('main.signup') }}">
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">First name</label>
                         <input class="form-control text-success bg-dark border-success" name="first_name" placeholder="pibble" required>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Last name</label>
                         <input class="form-control text-success bg-dark border-success" name="last_name" placeholder="Thedestroyer" required>
                     </div>
@@ -94,7 +94,7 @@
         </div>
 
         {% else %}
-        <div class="card border-success p-4" id="create-box" style="max-width: 480px; background: var(--background-nav);">
+        <div class="card border-success p-4 w-100" id="create-box" style="max-width: 480px; background: var(--background-nav);">
             <h2>Create an event!</h2>
             <p id="welcome">What are you playing, {{ current_user.first_name }}?</p>
 
@@ -108,7 +108,7 @@
                 <label class="form-label text-secondary small">Event name</label>
                 <input class="form-control text-success bg-dark border-success mb-3" name="event_name" placeholder="e.g. Tennis at UWA" required>
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Sport</label>
                         <select class="form-select bg-dark border-success text-success" name="sport" required>
                             <option disabled selected>Choose</option>
@@ -123,17 +123,17 @@
                             <option>Golf</option>
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Spots</label>
                         <input class="form-control text-success bg-dark border-success" name="spots_total" type="number" min="1" placeholder="10" required>
                     </div>
                 </div>
                 <div class="row g-3 mb-2">
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Date</label>
                         <input class="form-control text-success bg-dark border-success" name="date" type="date" required>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">Time</label>
                         <input class="form-control text-success bg-dark border-success" name="time" type="time" required>
                     </div>
