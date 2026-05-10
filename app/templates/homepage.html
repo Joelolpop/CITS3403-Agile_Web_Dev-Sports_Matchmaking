@@ -141,7 +141,7 @@
                 <label class="form-label text-secondary small">Location</label>
                 <input class="form-control text-success bg-dark border-success mb-3" name="location" placeholder="e.g. Nedlands" required>
                 <label class="form-label text-secondary small">Postcode</label>
-                <input class="form-control text-success bg-dark border-success mb-3" name="postcode" type="number" min="1000" max="9999" step="1" inputmode="numeric" placeholder="e.g. 6009" required>
+                <input class="form-control text-success bg-dark border-success mb-3" name="postcode" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" title="Postcode must be exactly 4 digits" placeholder="e.g. 6009" required>
                 <label class="form-label text-secondary small">Description</label>
                 <textarea class="form-control text-success bg-dark border-success mb-3" name="description" placeholder="Any extra details..."></textarea>
                 <button type="submit" class="btn btn-success w-100 fw-semibold">Create Event</button>
