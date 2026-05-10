@@ -1,6 +1,7 @@
 const searchInput = document.getElementById('friendSearch');
 const friendsList = document.getElementById('friendsList');
 const noResults = document.getElementById('noResults');
+const searchResults = document.getElementById('searchResults');
 
 let searchTimeout = null;
 
@@ -10,24 +11,35 @@ searchInput.addEventListener('input', function() {
     searchTimeout = setTimeout(() => {
         const query = searchInput.value.trim();
 
+        if (!query) {
+            friendsList.style.display = '';
+            searchResults.style.display = 'none';
+            noResults.style.display = 'none';
+            return;
+        }
+
         fetch(`/friends/search?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
-                friendsList.innerHTML = '';
+                friendsList.style.display = 'none';
+                searchResults.innerHTML = '';
 
                 if (data.friends.length === 0) {
+                    searchResults.style.display = 'none';
                     noResults.style.display = 'block';
                     return;
                 }
 
                 noResults.style.display = 'none';
+                searchResults.style.display = '';
 
                 data.friends.forEach(friend => {
                     const sports = friend.sports.map(sport =>
                         `<span class="badge bg-dark text-success border border-success" style="font-size: 0.8em;">${sport}</span>`
                     ).join(' ');
 
-                    friendsList.innerHTML += `
+                    searchResults.innerHTML += `
+                    <div class="col-12 col-md-6">
                         <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex align-items-center mb-3">
@@ -44,9 +56,10 @@ searchInput.addEventListener('input', function() {
                                     </div>
                                 </div>
 
-                                <a href="{{ url_for('main.friend_data', friend_id=friend.user_id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                                <a href="/friends/${friend.user_id}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
                             </div>
-                        </div>`
+                        </div>
+                    </div>`;
                 });
             })
             .catch(error => 

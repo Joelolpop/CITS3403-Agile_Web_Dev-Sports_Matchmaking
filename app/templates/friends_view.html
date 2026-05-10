@@ -12,7 +12,7 @@
            placeholder="Search friends by username or sport...">
 </div>
 
-<div class="row g-4 align-items-start">
+<div class="row g-4 align-items-start" id="friendsList">
     <div class="col-12 col-xl-8">
         <div class="card border-success shadow-sm mb-4" style="background: var(--background-nav);">
             <div class="card-body">
@@ -68,7 +68,7 @@
             {% endif %}
 
             {% for friend in friends %}
-            <div class="col-12 col-md-6"  id="friendsList">
+            <div class="col-12 col-md-6">
                 <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
@@ -81,12 +81,12 @@
                         <div class="mb-3">
                             <label class="small text-secondary d-block mb-1">Sports:</label>
                             <div class="d-flex flex-wrap gap-1">
-                                {% for sport in friend.sports %}
-                                <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
-                                    {{ sport }}
-                                </span>
-                                {% else %}
-                                <span class="text-secondary small">No sports selected.</span>
+                                {% for sport in [friend.sport_1, friend.sport_2, friend.sport_3] %}
+                                    {% if sport %}
+                                        <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
+                                            {{ sport }}
+                                        </span>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -149,6 +149,7 @@
     </div>
 </div>
 
+<div class="row g-4" id="searchResults" style="display: none;"></div>
 <p id="noResults" class="text-secondary mt-4" style="display: none; font-size: large;">No friends found.</p>
 
 <script src="{{ url_for('static', filename='js/friends_view.js') }}"></script>
