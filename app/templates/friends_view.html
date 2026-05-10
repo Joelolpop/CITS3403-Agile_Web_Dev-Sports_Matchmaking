@@ -5,34 +5,141 @@
     <h1>Your <span class="text-success">Friends</span></h1>
 </div>
 
-<div class="row g-4">
-    {% for friend in friends %}
-    <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
-            <div class="card-body d-flex flex-column">
-                <div class="d-flex align-items-center mb-3">
+<div class="row g-4 align-items-start">
+    <div class="col-12 col-xl-8">
+        <div class="card border-success shadow-sm mb-4" style="background: var(--background-nav);">
+            <div class="card-body">
+                <h4 class="text-success mb-3">Pending Requests</h4>
+
+                {% if pending_requests %}
+                    <div class="mb-3">
+                        {% for friend_request in pending_requests %}
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between border border-success rounded p-3 mb-2 gap-2">
+                            <div>
+                                <div class="text-white fw-semibold">{{ friend_request.requester.username or friend_request.requester.first_name }}</div>
+                                <small class="text-secondary">wants to connect with you</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <form method="POST" action="{{ url_for('main.accept_friend_request', request_id=friend_request.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('main.reject_friend_request', request_id=friend_request.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-secondary mb-3">No incoming requests right now.</p>
+                {% endif %}
+
+                <h6 class="text-secondary">Requests You Sent</h6>
+                {% if outgoing_requests %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for friend_request in outgoing_requests %}
+                        <span class="badge bg-dark border border-success text-success px-3 py-2">
+                            {{ friend_request.receiver.username or friend_request.receiver.first_name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-secondary mb-0">You have not sent any pending requests.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% if not friends %}
+            <div class="col-12">
+                <div class="card border-success shadow-sm" style="background: var(--background-nav);">
+                    <div class="card-body">
+                        <p class="mb-0 text-secondary">No friends yet. Go to Match and send a connection request.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% for friend in friends %}
+            <div class="col-12 col-md-6">
+                <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div>
+                                <h5 class="mb-0 text-white">{{ friend.username or friend.first_name }}</h5>
+                                <small class="text-secondary">{{ friend.postcode or "No postcode" }}</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="small text-secondary d-block mb-1">Sports:</label>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for sport in friend.sports %}
+                                <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
+                                    {{ sport }}
+                                </span>
+                                {% else %}
+                                <span class="text-secondary small">No sports selected.</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('main.friend_data', friend_id=friend.user_id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+        <div class="card border-success shadow-sm" style="background: var(--background-nav); position: sticky; top: 1rem;">
+            <div class="card-body">
+                <h4 class="text-success mb-3">Your Profile</h4>
+
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if current_user.profile_image %}
+                    <img
+                        src="{{ url_for('static', filename=current_user.profile_image) }}"
+                        alt="Your profile image"
+                        class="rounded-circle border border-success"
+                        style="width: 72px; height: 72px; object-fit: cover;"
+                    >
+                    {% else %}
+                    <div
+                        class="rounded-circle border border-success d-flex align-items-center justify-content-center text-success fw-bold"
+                        style="width: 72px; height: 72px; background: rgba(74, 222, 128, 0.08);"
+                    >
+                        {{ (current_user.first_name or "U")[:1] }}{{ (current_user.last_name or "")[:1] }}
+                    </div>
+                    {% endif %}
+
                     <div>
-                        <h5 class="mb-0 text-white">{{ friend.username }}</h5>
-                        <small class="text-secondary">{{ friend.postcode }}</small>
+                        <h5 class="mb-0 text-white">{{ current_user.username or (current_user.first_name ~ " " ~ current_user.last_name) }}</h5>
+                        <small class="text-secondary">{{ current_user.email }}</small>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="small text-secondary d-block mb-1">Sports:</label>
+                    <div class="small text-secondary">Postcode</div>
+                    <div class="text-white">{{ current_user.postcode or "Not set" }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="small text-secondary mb-1">Sports</div>
                     <div class="d-flex flex-wrap gap-1">
-                        {% for sport in friend.sports %}
-                        <span class="badge bg-dark text-success border border-success" style="font-size: 0.75rem;">
-                            {{ sport }}
-                        </span>
+                        {% for sport in current_user.sports %}
+                        <span class="badge bg-dark text-success border border-success">{{ sport }}</span>
+                        {% else %}
+                        <span class="text-secondary small">No sports selected.</span>
                         {% endfor %}
                     </div>
                 </div>
 
-                <a href="{{ url_for('main.friend_data', friend_id=friend.id) }}" class="btn btn-outline-success btn-sm mt-auto">View Profile</a>
+                <a href="{{ url_for('main.profile') }}" class="btn btn-success w-100">Edit Your Profile</a>
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 
 {% endblock %}
