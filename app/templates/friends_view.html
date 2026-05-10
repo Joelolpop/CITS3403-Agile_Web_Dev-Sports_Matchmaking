@@ -5,7 +5,12 @@
     <h1>Your <span class="text-success">Friends</span></h1>
 </div>
 
-<div class="row g-4">
+<div class="mb-4">
+    <input type="text" id="friendSearch" class="form-control bg-dark text-success border border-success" 
+           placeholder="Search friends by username or sport...">
+</div>
+
+<div class="row g-4" id="friendsList">
     {% for friend in friends %}
     <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
@@ -35,4 +40,7 @@
     {% endfor %}
 </div>
 
+<p id="noResults" class="text-secondary mt-4" style="display: none;">No friends found.</p>
+
+<script src="{{ url_for('static', filename='js/friends_view.js') }}"></script>
 {% endblock %}
