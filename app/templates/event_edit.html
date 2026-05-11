@@ -12,13 +12,18 @@
         <div class="card border-success p-4" style="background: var(--background-nav);">
             <h2 class="mb-1 text-white">Edit <span class="text-success">Event</span></h2>
             <p class="text-secondary small mb-4">Update the details below and save your changes.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} py-2 small">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
  
             <form method="POST" action="/events/{{ event.event_id }}/edit">
  
                 <label class="form-label text-secondary small">Event name</label>
                 <input
                     class="form-control text-success bg-dark border-success mb-3"
-                    name="name"
+                    name="event_name"
                     value="{{ event.event_name }}">
  
                 <div class="row g-3 mb-2">
@@ -42,7 +47,7 @@
                         <input
                             class="form-control text-success bg-dark border-success"
                             type="number"
-                            name="spots"
+                            name="spots_total"
                             min="1"
                             value="{{ event.spots_total }}">
                     </div>
@@ -81,7 +86,7 @@
                     maxlength="4" 
                     pattern="[0-9]{4}" 
                     title="Postcode must be exactly 4 digits" 
-                    value="{{ event.postcode }}">
+                    value="{{ '%04d' % event.postcode }}">
  
                 <label class="form-label text-secondary small">Description</label>
                 <textarea

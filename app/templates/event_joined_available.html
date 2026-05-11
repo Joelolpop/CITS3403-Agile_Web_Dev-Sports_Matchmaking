@@ -34,7 +34,7 @@
 			<article class="card border-success mb-3 p-3" style="background: var(--background-base);">
 				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.event_name }}</span>
 				<h6 class="fw-bold mb-1" style="color: var(--green-name);">{{ event.sport }}</h6>
-				<p class="text-secondary small mb-1">{{ event.location }}, {{ event.postcode }}</p>
+				<p class="text-secondary small mb-1">{{ event.location }}, {{ '%04d' % event.postcode }}</p>
 				<a href="/events/{{ event.event_id }}" class="btn btn-success btn-sm mt-2">View Event</a>
 			</article>
 			{% endfor %}

@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Location</div>
-                    <div class="fw-medium">{{ event.location }}, {{ event.postcode }}</div>
+                    <div class="fw-medium">{{ event.location }}, {{'%04d' % event.postcode }}</div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.06em;">Spots</div>

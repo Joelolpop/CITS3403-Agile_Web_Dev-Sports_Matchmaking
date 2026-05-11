@@ -74,7 +74,7 @@
                         <div class="d-flex align-items-center mb-3">
                             <div>
                                 <h5 class="mb-0 text-white">{{ friend.username or friend.first_name }}</h5>
-                                <small class="text-secondary">{{ friend.postcode or "No postcode" }}</small>
+                                <small class="text-secondary">{{ '%04d' % friend.postcode if friend.postcode else "No postcode" }}</small>
                             </div>
                         </div>
 
@@ -129,7 +129,7 @@
 
                 <div class="mb-3">
                     <div class="small text-secondary">Postcode</div>
-                    <div class="text-white">{{ current_user.postcode or "Not set" }}</div>
+                    <div class="text-white">{{ '%04d' % current_user.postcode if current_user.postcode else "Not set" }}</div>
                 </div>
 
                 <div class="mb-3">
