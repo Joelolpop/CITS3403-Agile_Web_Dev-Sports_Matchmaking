@@ -343,6 +343,24 @@ def friend_data(friend_id):
     friend = Users.query.get_or_404(friend_id)
     return render_template("friend_data_view.html", friend=friend)
 
+@main.route("/friends/<int:friend_id>/remove", methods=["POST"])
+@login_required
+def remove_friend(friend_id):
+    friendsConnection1 = Friends.query.filter_by(user_id=current_user.user_id, friend_id=friend_id).first()
+    friendsConnection2 = Friends.query.filter_by(user_id=friend_id, friend_id=current_user.user_id).first()
+    
+    if friendsConnection1:
+        db.session.delete(friendsConnection1)
+    if friendsConnection2:
+        db.session.delete(friendsConnection2)
+
+    if not friendsConnection1 and not friendsConnection2:
+        return jsonify({"ok": False, "message": "Friend connection not found."}), 404
+
+    db.session.commit()
+
+    return jsonify({"ok": True})
+
 
 @main.route("/events")
 @login_required
