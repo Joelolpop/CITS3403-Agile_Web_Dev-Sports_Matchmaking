@@ -6,8 +6,14 @@ document.getElementById('removeFriendBtn').addEventListener('click', function() 
 
         this.disabled = true;
 
-        setTimeout(() => {
+        fetch(`/friends/${friendId}/remove`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(() => {
             window.location.href = redirectUrl;
-        }, 800);
+        });
     }
 });
