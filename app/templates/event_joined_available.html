@@ -2,10 +2,9 @@
 {% block content %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/event_joined_available.css') }}">
-<a href="/" class="btn btn-outline-success btn-sm mb-4">← Back to Home</a>
 <div class="split-header mb-4">
 	<p class="text-secondary small text-uppercase mb-1" style="letter-spacing: 0.1em;">Events</p>
-	<h2 class="mb-0">Events Available & Events Joined</h2>
+	<h2 class="mb-0 text-white">Events <span class="text-success">Available</span> & Events <span class="text-success">Joined</span></h2>
 	<p class="text-secondary mb-0 mt-2">
 	</p>
 </div>
@@ -13,12 +12,12 @@
 <div class="row g-4 split-events-layout">
 	<div class="col-12 col-lg-7">
 		<section class="event-section-card p-4 h-100">
-			<h4 class="mb-3">Events Available</h4>
+			<h4 class="mb-3"><span class="text-success">Events</span> Available</h4>
 
 			{% for event in events_available %}
 			<article class="card border-success mb-3 p-3" style="background: var(--background-base);">
-				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
-				<h6 class="fw-bold mb-1">{{ event.event_name }}</h6>
+				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.event_name }}</span>
+				<h6 class="fw-bold mb-1" style="color: var(--green-name);">{{ event.sport }}</h6>
 				<p class="text-secondary small mb-1">{{ event.location }}, {{ event.postcode }}</p>
 				<a href="/events/{{ event.event_id }}" class="btn btn-success btn-sm mt-2">View Event</a>
 			</article>
@@ -28,14 +27,14 @@
 
 	<div class="col-12 col-lg-5">
 		<section class="event-section-card p-4 h-100">
-			<h4 class="mb-3">Events Joined</h4>
+			<h4 class="mb-3"><span class="text-success">Events</span> Joined</h4>
 
 			{% for event in events_joined %}
 			<article class="card border-success mb-3 p-3" style="background: var(--background-base);">
-				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
-				<h6 class="fw-bold mb-1">{{ event.event_name }}</h6>
-				<p class="text-secondary small mb-1">{{ event.location }}, {{ event.postcode }}</p>
-				<a href="/events/{{ event.event_id }}" class="btn btn-outline-success btn-sm mt-2">View Event</a>
+				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.event_name }}</span>
+				<h6 class="fw-bold mb-1" style="color: var(--green-name);">{{ event.sport }}</h6>
+				<p class="text-secondary small mb-1">{{ event.location }}, {{ '%04d' % event.postcode }}</p>
+				<a href="/events/{{ event.event_id }}" class="btn btn-success btn-sm mt-2">View Event</a>
 			</article>
 			{% endfor %}
 		</section>

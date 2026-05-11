@@ -521,30 +521,34 @@ def event_edit(event_id):
         event_name  = request.form.get("event_name", "").strip()
         sport       = request.form.get("sport", "").strip()
         location    = request.form.get("location", "").strip()
-        postcode    = request.form.get("postcode", "").strip()
+        postcode_raw = request.form.get("postcode", "")
         description = request.form.get("description", "").strip()
         date_str    = request.form.get("date", "")
         time_str    = request.form.get("time", "")
         spots_total = request.form.get("spots_total", "")
 
-        if not all([event_name, sport, location, postcode, date_str, time_str, spots_total]):
+        if not all([event_name, sport, location, postcode_raw, date_str, time_str, spots_total]):
             flash("All fields except description are required.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
 
-        if not postcode.isdigit() or len(postcode) != 4:
-            flash("Postcode must be exactly 4 digits.", "danger")
+        postcode, postcode_error = parse_postcode(postcode_raw, required=True)
+        if postcode_error:
+            flash(postcode_error, "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
 
         try:
-            event.date        = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-            event.time        = datetime.datetime.strptime(time_str, "%H:%M").time()
+            event.date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            try:
+                event.time = datetime.datetime.strptime(time_str, "%H:%M").time()
+            except ValueError:
+                event.time = datetime.datetime.strptime(time_str, "%H:%M:%S").time()
             event.spots_total = int(spots_total)
             if event.spots_total < 1:
                 raise ValueError
         except ValueError:
             flash("Invalid date, time, or spots value.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
-
+        
         event.event_name  = event_name
         event.sport       = sport
         event.location    = location

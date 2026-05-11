@@ -52,8 +52,8 @@
 
         {% if not current_user.is_authenticated %}
         <div class="card border-success p-4 w-100" id="auth-box" style="max-width: 480px; background: var(--background-nav);">
-            <h2>Join MatchUp</h2>
-            <p>Sign up or log in to start matching.</p>
+            <h2 class="text-white"><span class="text-success">Join</span> MatchUp</h2>
+            <p class="text-secondary">Sign up or log in to start matching.</p>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% for category, message in messages %}
@@ -95,8 +95,8 @@
 
         {% else %}
         <div class="card border-success p-4 w-100" id="create-box" style="max-width: 480px; background: var(--background-nav);">
-            <h2>Create an event!</h2>
-            <p id="welcome">What are you playing, {{ current_user.first_name }}?</p>
+            <h2 class="text-white"><span class="text-success">Create</span> an event!</h2>
+            <p id="welcome" class="text-secondary">What are you playing, {{ current_user.first_name }}?</p>
 
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% for category, message in messages %}

@@ -3,12 +3,14 @@
     --green-dim:     #22c55e;
     --green-glow:    rgba(74, 222, 128, 0.08);
     --green-border:  #1e4d2b;
+    --green-name: #387a38;
 
     --background-base:  #0f0f0f;
     --background-nav:   #121212;
 
     --text-main:     #e5e7eb;
     --text-boring:    #6b7280;
+    
 }
 
 body {
