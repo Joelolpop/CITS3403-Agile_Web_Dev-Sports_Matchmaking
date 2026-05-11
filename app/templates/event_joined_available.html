@@ -18,7 +18,7 @@
 			{% for event in events_available %}
 			<article class="card border-success mb-3 p-3" style="background: var(--background-base);">
 				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
-				<h6 class="fw-bold mb-1">{{ event.event_name }}</h6>
+				<h6 class="fw-bold mb-1" style="color: var(--green-name);">{{ event.event_name }}</h6>
 				<p class="text-secondary small mb-1">{{ event.location }}, {{ event.postcode }}</p>
 				<a href="/events/{{ event.event_id }}" class="btn btn-success btn-sm mt-2">View Event</a>
 			</article>
@@ -33,7 +33,7 @@
 			{% for event in events_joined %}
 			<article class="card border-success mb-3 p-3" style="background: var(--background-base);">
 				<span class="badge text-success border border-success bg-transparent rounded-pill mb-2 small text-uppercase">{{ event.sport }}</span>
-				<h6 class="fw-bold mb-1">{{ event.event_name }}</h6>
+				<h6 class="fw-bold mb-1" style="color: var(--green-name);">{{ event.event_name }}</h6>
 				<p class="text-secondary small mb-1">{{ event.location }}, {{ event.postcode }}</p>
 				<a href="/events/{{ event.event_id }}" class="btn btn-outline-success btn-sm mt-2">View Event</a>
 			</article>
