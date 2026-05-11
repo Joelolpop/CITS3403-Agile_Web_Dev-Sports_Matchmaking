@@ -1,12 +1,18 @@
 // Add event listeners for tab switching
-document.getElementById("tabsu").addEventListener("click", function() {
-    switchTab('su');
-});
+const tabSuBtn = document.getElementById("tabsu");
+const tabLiBtn = document.getElementById("tabli");
 
-document.getElementById("tabli").addEventListener("click", function() {
-    switchTab('li');
-});
+if (tabSuBtn) {
+    tabSuBtn.addEventListener("click", function() {
+        switchTab('su');
+    });
+}
 
+if (tabLiBtn) {
+    tabLiBtn.addEventListener("click", function() {
+        switchTab('li');
+    });
+}
 
 
 //tab switcher-changes tab when pressing on signup or login
