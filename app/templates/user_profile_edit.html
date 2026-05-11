@@ -57,7 +57,7 @@
 					</div>
 					<div class="col-12 col-md-6">
 						<label class="form-label text-secondary small">Postcode</label>
-						<input class="form-control text-success bg-dark border-success" type="text" name="postcode" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" title="Postcode must be exactly 4 digits" placeholder="e.g. 6009" value="{{ user.postcode or '' }}">
+						<input class="form-control text-success bg-dark border-success" type="text" name="postcode" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" title="Postcode must be exactly 4 digits" placeholder="e.g. 6009" value="{{ '%04d' % user.postcode if user.postcode else '' }}">
 					</div>
 				</div>
 			<div class="row g-3 mt-1 mb-1">
