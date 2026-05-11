@@ -359,6 +359,7 @@ def remove_friend(friend_id):
 
     db.session.commit()
 
+    flash("Friend removed.", "success")
     return jsonify({"ok": True})
 
 
