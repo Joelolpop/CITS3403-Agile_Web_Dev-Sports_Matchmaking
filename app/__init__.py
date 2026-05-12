@@ -27,6 +27,9 @@ def create_app():
     def load_user(user_id):
         return models.Users.query.get(int(user_id))
 
+    from jinja2 import select_autoescape
+    app.jinja_env.autoescape = select_autoescape(['html', 'htm', 'xml'])
+
     from .routes import main
     app.register_blueprint(main)
 
