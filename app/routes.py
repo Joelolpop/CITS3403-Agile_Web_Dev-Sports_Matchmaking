@@ -124,11 +124,12 @@ def signup():
 def login():
     form = LoginForm()
     if not form.validate_on_submit():
-        if request.method == "POST":
+        if form.is_submitted():
             flash("Invalid email or password.", "danger")
         return redirect(url_for("main.homepage"))
 
-    user = Users.query.filter_by(email=form.email.data).first()
+    email = (form.email.data or "").strip().lower()
+    user = Users.query.filter_by(email=email).first()
     if user is None or not user.check_password(form.password.data):
         flash("Invalid email or password.", "danger")
         return redirect(url_for("main.homepage"))
