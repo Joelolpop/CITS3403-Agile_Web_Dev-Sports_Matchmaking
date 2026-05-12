@@ -14,6 +14,8 @@ document.querySelectorAll(".pass-btn").forEach(function(btn) {
 function handleConnect(button) {
     const cardContainer = button.closest('.player-card-container');
     const receiverId = button.dataset.userId;
+    const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
     
     if (!receiverId) {
         alert("Could not send request. Please refresh and try again.");
@@ -25,11 +27,19 @@ function handleConnect(button) {
     fetch('/friends/request', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken || ''
         },
         body: JSON.stringify({ receiver_id: receiverId })
     })
-    .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
+    .then(async (response) => {
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json')
+            ? await response.json()
+            : { ok: false, message: 'Request failed. Please refresh and try again.' };
+
+        return { ok: response.ok, data };
+    })
     .then(({ ok, data }) => {
         if (!ok || !data.ok) {
             throw new Error(data.message || 'Failed to send request.');
