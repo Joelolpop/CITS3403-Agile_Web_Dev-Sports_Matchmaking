@@ -5,6 +5,7 @@ from sqlalchemy import or_
 from werkzeug.utils import secure_filename
 from app import db
 from app.models import Users, Matching, Friends, FriendRequest, Events, Attendees
+from app.forms import LoginForm
 import datetime
 
 main = Blueprint('main', __name__)
@@ -119,17 +120,20 @@ def signup():
     return redirect(url_for("main.profile"))
 
 
-@main.route("/login", methods=["POST"])
+@main.route("/login", methods=["GET", "POST"])
 def login():
-    email    = request.form.get("email", "").strip().lower()
-    password = request.form.get("password", "")
+    form = LoginForm()
+    if not form.validate_on_submit():
+        if request.method == "POST":
+            flash("Invalid email or password.", "danger")
+        return redirect(url_for("main.homepage"))
 
-    user = Users.query.filter_by(email=email).first()
-    if user is None or not user.check_password(password):
+    user = Users.query.filter_by(email=form.email.data).first()
+    if user is None or not user.check_password(form.password.data):
         flash("Invalid email or password.", "danger")
         return redirect(url_for("main.homepage"))
 
-    login_user(user)
+    login_user(user, remember=form.remember_me.data)
     return redirect(url_for("main.homepage"))
 
 
