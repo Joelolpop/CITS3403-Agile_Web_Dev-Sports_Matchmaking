@@ -20,6 +20,7 @@
 			{% endwith %}
 
 			<form id="user-profile-form" method="POST" action="{{ url_for('main.profile') }}" enctype="multipart/form-data">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 				<div class="mb-3">
 					<label class="form-label text-secondary small">Profile Image (.jpg)</label>
 					<input class="form-control text-success bg-dark border-success" type="file" name="profile_image" accept=".jpg,.jpeg,image/jpeg">
