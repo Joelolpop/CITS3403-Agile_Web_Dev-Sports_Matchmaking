@@ -19,6 +19,7 @@
             {% endwith %}
  
             <form method="POST" action="/events/{{ event.event_id }}/edit">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
  
                 <label class="form-label text-secondary small">Event name</label>
                 <input
@@ -128,6 +129,7 @@
             <div class="modal-footer border-danger">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                 <form method="POST" action="/events/{{ event.event_id }}/delete">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-danger fw-semibold">Yes, delete it</button>
                 </form>
             </div>
