@@ -478,7 +478,23 @@ def event_view(event_id):
         user_id=current_user.user_id
     ).first() is not None
 
-    return render_template("event_view.html", event=event, user_has_joined=user_has_joined)
+    friends = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friend_ids = {f.friend_id for f in friends}
+
+    host_attendee = None
+    friend_attendees = []
+    for a in event.members:
+        if a.is_host:
+            host_attendee = a
+        elif a.user_id in friend_ids:
+            friend_attendees.append(a)
+
+    visible_attendees = []
+    if host_attendee:
+        visible_attendees.append(host_attendee)
+    visible_attendees += friend_attendees[:4]  
+
+    return render_template("event_view.html", event=event, user_has_joined=user_has_joined, friend_ids=friend_ids, visible_attendees=visible_attendees)
 
 @main.route("/events/<int:event_id>/join")
 @login_required

@@ -70,9 +70,9 @@
             </h5>
             <div class="d-flex flex-wrap gap-3 align-items-center">
 
-                {% for attendee in event.members %}
+                {% for attendee in visible_attendees %}
                 <div class="d-flex align-items-center gap-2">
-                    <div class=>{{ attendee.user.first_name[0] }}</div>
+                    <div class="rounded-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold" style="width:36px; height:36px;">{{ attendee.user.first_name[0] }}</div>
                     <span class="small">{{ attendee.user.first_name }} {{ attendee.user.last_name }}</span>
                     {% if attendee.is_host %}
                         <span class="badge text-success border border-success bg-transparent rounded-pill small">Host</span>
@@ -80,12 +80,9 @@
                 </div>
                 {% endfor %}
 
-                {% for i in range(event.spots_total - event.spots_filled) %}
-                <div class="d-flex align-items-center gap-2">
-                    <div class=" bg-transparent border border-secondary text-secondary" style="border-style: dashed !important;">+</div>
-                    <span class="small text-secondary">Open spot</span>
-                </div>
-                {% endfor %}
+                {% if visible_attendees|length <= 1 %}
+                    <p class="text-secondary small mb-0 mt-2">No friends have joined yet.</p>
+                {% endif %}
 
             </div>
         </div>
