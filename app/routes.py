@@ -423,22 +423,28 @@ def create_event():
     if not all([event_name, sport, location, postcode_raw, date_str, time_str, spots_total]):
         flash("All fields except description are required.", "danger")
         return redirect(url_for("main.homepage"))
-
     try:
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         time = datetime.datetime.strptime(time_str, "%H:%M").time()
-        spots_total = int(spots_total)
-        if spots_total < 1:
-            raise ValueError
+        
     except ValueError:
-        flash("Invalid date, time, or spots value.", "danger")
+        flash("Invalid date or time", "danger")
         return redirect(url_for("main.homepage"))
     
     postcode, postcode_error = parse_postcode(postcode_raw, required=True)
     if postcode_error:
         flash(postcode_error, "danger")
         return redirect(url_for("main.homepage"))
+    
+    try:
+        spots_total = int(spots_total)
+    except ValueError:
+        flash("Spots must be a valid number.", "danger")
+        return redirect(url_for("main.homepage"))
 
+    if spots_total < 2 or spots_total > 360:
+        flash("Spots must be between 2 and 360.", "danger")
+        return redirect(url_for("main.homepage"))
     event = Events(
         owner_id    = current_user.user_id,
         event_name  = event_name,
@@ -478,7 +484,23 @@ def event_view(event_id):
         user_id=current_user.user_id
     ).first() is not None
 
-    return render_template("event_view.html", event=event, user_has_joined=user_has_joined)
+    friends = Friends.query.filter_by(user_id=current_user.user_id).all()
+    friend_ids = {f.friend_id for f in friends}
+
+    host_attendee = None
+    friend_attendees = []
+    for a in event.members:
+        if a.is_host:
+            host_attendee = a
+        elif a.user_id in friend_ids:
+            friend_attendees.append(a)
+
+    visible_attendees = []
+    if host_attendee:
+        visible_attendees.append(host_attendee)
+    visible_attendees += friend_attendees[:4]  
+
+    return render_template("event_view.html", event=event, user_has_joined=user_has_joined, friend_ids=friend_ids, visible_attendees=visible_attendees)
 
 @main.route("/events/<int:event_id>/join")
 @login_required
@@ -561,23 +583,32 @@ def event_edit(event_id):
             return redirect(url_for("main.event_edit", event_id=event_id))
 
         try:
+            spots_total = int(spots_total)
+        except ValueError:
+            flash("Spots must be a valid number.", "danger")
+            return redirect(url_for("main.event_edit", event_id=event_id))
+
+        if spots_total < 2 or spots_total > 360:
+            flash("Spots must be between 2 and 360.", "danger")
+            return redirect(url_for("main.event_edit", event_id=event_id))
+        
+        try:
             event.date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
             try:
                 event.time = datetime.datetime.strptime(time_str, "%H:%M").time()
             except ValueError:
                 event.time = datetime.datetime.strptime(time_str, "%H:%M:%S").time()
-            event.spots_total = int(spots_total)
-            if event.spots_total < 1:
-                raise ValueError
         except ValueError:
-            flash("Invalid date, time, or spots value.", "danger")
+            flash("Invalid date or time value.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
+        
         
         event.event_name  = event_name
         event.sport       = sport
         event.location    = location
         event.postcode    = postcode
         event.description = description
+        event.spots_total = spots_total
 
         db.session.commit()
         flash("Event updated successfully.", "success")

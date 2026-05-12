@@ -4,19 +4,22 @@ document.getElementById('removeFriendBtn').addEventListener('click', function() 
     const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
     const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : null;
     
-    if (confirm('Are you sure you want to remove this friend?')) {
+     this.disabled = true;
 
-        this.disabled = true;
-
-        fetch(`/friends/${friendId}/remove`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken || ''
-            }
-        })
-        .then(() => {
+    fetch(`/friends/${friendId}/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken || ''
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.ok) {
             window.location.href = redirectUrl;
-        });
-    }
+        } else {
+            alert(data.message);
+            this.disabled = false;
+        }
+    });
 });

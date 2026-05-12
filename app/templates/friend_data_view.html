@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="form-label text-secondary small d-block">Location (Postcode)</label>
-                    <p class="fs-5 text-success">{{ friend.postcode }}</p>
+                    <p class="fs-5 text-success">{{ '%04d' % friend.postcode if friend.postcode else 'Not set' }}</p>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="form-label text-secondary small d-block">Gender</label>
@@ -65,10 +65,9 @@
             <div class="mt-5 row g-2">
                 <div class="col-12">
                     <button type="button" 
-                            id="removeFriendBtn" 
-                            data-friend-id="{{ friend.user_id }}"
-                            data-friend-url="{{ url_for('main.friends_list') }}" 
-                            class="btn btn-outline-danger w-100 fw-semibold">
+                            class="btn btn-outline-danger w-100 fw-semibold"
+                            data-bs-toggle="modal"
+                            data-bs-target="#removeFriendModal">
                         Remove Friend
                     </button>
                 </div>
@@ -77,5 +76,30 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="removeFriendModal" tabindex="-1" aria-labelledby="removeFriendModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-danger">
+            <div class="modal-header border-danger">
+                <h5 class="modal-title" id="removeFriendModalLabel">Remove Friend</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-secondary">
+                Are you sure you want to remove <span class="text-white fw-semibold">{{ friend.first_name }} {{ friend.last_name }}</span> as a friend? This cannot be undone.
+            </div>
+            <div class="modal-footer border-danger">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" 
+                        id="removeFriendBtn" 
+                        data-friend-id="{{ friend.user_id }}"
+                        data-friend-url="{{ url_for('main.friends_list') }}"
+                        class="btn btn-danger fw-semibold">
+                    Yes, remove them
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{ url_for('static', filename='js/friends_data_view.js') }}"></script>
 {% endblock %}
