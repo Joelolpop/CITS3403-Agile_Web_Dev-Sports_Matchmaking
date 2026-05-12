@@ -1,6 +1,32 @@
+import re
 from app import db
 from flask_login import UserMixin
+from sqlalchemy import String, Text
+from sqlalchemy.types import TypeDecorator
 from werkzeug.security import generate_password_hash, check_password_hash
+
+_HTML_TAG_RE = re.compile(r'<[^>]+')
+
+def _strip_tags(value):
+    if value is None:
+        return None
+    return _HTML_TAG_RE.sub('', str(value))
+
+
+class SafeString(TypeDecorator):
+    impl = String
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        return _strip_tags(value)
+
+
+class SafeText(TypeDecorator):
+    impl = Text
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        return _strip_tags(value)
 
 SPORTS = ["Soccer", "Basketball", "Tennis", "Netball", "Cricket", "Australian Rules Football", "Swimming", "Rugby", "Golf"]
 GENDER = ["M","F","Others"]
@@ -10,17 +36,17 @@ RESPONSE_B = ["Accept", "Reject"]
 class Users(UserMixin, db.Model):
     __tablename__ = 'users'
     user_id       = db.Column(db.Integer, primary_key=True)
-    username      = db.Column(db.String(64), unique=True, nullable=True)
+    username      = db.Column(SafeString(64), unique=True, nullable=True)
     email         = db.Column(db.String(120), unique=True, nullable=False)
-    first_name    = db.Column(db.String(64), nullable=False)
-    last_name     = db.Column(db.String(64), nullable=False)
-    gender        = db.Column(db.String(16))
+    first_name    = db.Column(SafeString(64), nullable=False)
+    last_name     = db.Column(SafeString(64), nullable=False)
+    gender        = db.Column(SafeString(16))
     postcode      = db.Column(db.Integer)
     profile_image = db.Column(db.String(255))
-    instagram     = db.Column(db.String(100))
-    sport_1       = db.Column(db.String(64))
-    sport_2       = db.Column(db.String(64))
-    sport_3       = db.Column(db.String(64))
+    instagram     = db.Column(SafeString(100))
+    sport_1       = db.Column(SafeString(64))
+    sport_2       = db.Column(SafeString(64))
+    sport_3       = db.Column(SafeString(64))
     password_hash = db.Column(db.String(256), nullable=False)
 
     def get_id(self):
@@ -83,11 +109,11 @@ class Events(db.Model):
 
     event_id          = db.Column(db.Integer, primary_key=True)
     owner_id          = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    event_name        = db.Column(db.String(128), nullable=False)
+    event_name        = db.Column(SafeString(128), nullable=False)
     sport             = db.Column(db.String(64), nullable=False)
-    location          = db.Column(db.String(128), nullable=False)
+    location          = db.Column(SafeString(128), nullable=False)
     postcode          = db.Column(db.Integer, nullable=False)
-    description       = db.Column(db.Text)
+    description       = db.Column(SafeText)
     date              = db.Column(db.Date, nullable=False)
     time              = db.Column(db.Time, nullable=False)
     spots_total       = db.Column(db.Integer, nullable=False)
