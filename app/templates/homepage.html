@@ -67,6 +67,7 @@
             </div>
 
             <form id="formsu" method="POST" action="{{ url_for('main.signup') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="row g-3 mb-2">
                     <div class="col-12 col-sm-6">
                         <label class="form-label text-secondary small">First name</label>
@@ -85,6 +86,7 @@
             </form>
 
             <form id="formli" class="d-none" method="POST" action="{{ url_for('main.login') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label class="form-label text-secondary small">Email</label>
                 <input class="form-control text-success bg-dark border-success mb-3" type="email" name="email" placeholder="youz@email.com" required>
                 <label class="form-label text-secondary small">Password</label>
@@ -109,6 +111,7 @@
             {% endwith %}
 
             <form method="POST" action="{{ url_for('main.create_event') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label class="form-label text-secondary small">Event name</label>
                 <input class="form-control text-success bg-dark border-success mb-3" name="event_name" placeholder="e.g. Tennis at UWA" required>
                 <div class="row g-3 mb-2">
