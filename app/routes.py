@@ -442,8 +442,8 @@ def create_event():
         flash("Spots must be a valid number.", "danger")
         return redirect(url_for("main.homepage"))
 
-    if spots_total < 1 or spots_total > 360:
-        flash("Spots must be between 1 and 360.", "danger")
+    if spots_total < 2 or spots_total > 360:
+        flash("Spots must be between 2 and 360.", "danger")
         return redirect(url_for("main.homepage"))
     event = Events(
         owner_id    = current_user.user_id,
@@ -588,8 +588,8 @@ def event_edit(event_id):
             flash("Spots must be a valid number.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
 
-        if spots_total < 1 or spots_total > 360:
-            flash("Spots must be between 1 and 360.", "danger")
+        if spots_total < 2 or spots_total > 360:
+            flash("Spots must be between 2 and 360.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
         
         try:
