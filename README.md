@@ -10,3 +10,16 @@ This project consists of:
 - **Frontend**: HTML/CSS/JavaScript templates with dynamic functionality
 - **Database**: SQLite (local development)
 - **Testing**: Selenium integration tests for end-to-end workflows
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Setup Instructions](#setup-instructions)
+  - [macOS Setup](#macos-setup)
+  - [Windows Setup](#windows-setup)
+- [Python Dependencies](#python-dependencies)
+- [Running the Application](#running-the-application)
+- [Database Migrations](#database-migrations)
+- [Running Tests](#running-tests)
+- [Project Structure](#project-structure)
+
