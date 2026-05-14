@@ -240,3 +240,73 @@ If needed, downgrade the database schema:
 ```cmd
 python db_downgrade.sh
 ```
+
+## Running Tests
+
+The project includes comprehensive Selenium integration tests for end-to-end testing of key workflows: user signup, profile management, event creation, and friend connections.
+
+### Run Selenium Integration Tests (v2 - Recommended)
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 testing/integration_testv2.py -v
+```
+
+**Windows (with virtual environment activated):**
+
+```cmd
+python testing/integration_testv2.py -v
+```
+
+### Run Original Integration Tests
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 testing/integration.py -v
+```
+
+**Windows (with virtual environment activated):**
+
+```cmd
+python testing/integration.py -v
+```
+
+### Test Coverage
+
+- **Signup & Profile Update**: User registration and profile completion
+- **Login & Event Creation**: User authentication and event management
+- **Friend Workflow**: Sending friend requests, accepting, and removing connections
+- **Smoke Tests**: Homepage accessibility and basic functionality
+
+## Project Structure
+
+```
+.
+├── app/                          # Main Flask application
+│   ├── __init__.py              # App initialization
+│   ├── config.py                # Configuration settings
+│   ├── forms.py                 # WTForms definitions
+│   ├── models.py                # SQLAlchemy models (Users, Events, Friends, etc.)
+│   ├── routes.py                # Flask route handlers
+│   ├── static/                  # Static files
+│   │   ├── css/                 # Stylesheets
+│   │   └── js/                  # JavaScript files
+│   └── templates/               # HTML templates
+│       ├── base.html            # Base template
+│       ├── homepage.html        # Home page
+│       ├── user_profile_edit.html # Profile editor
+│       ├── event_*.html         # Event-related templates
+│       ├── friends_*.html       # Friend-related templates
+│       └── matching.html        # Matching interface
+├── migrations/                   # Alembic database migrations
+│   └── versions/                # Migration scripts
+├── testing/                      # Test suites
+│   ├── integration.py           # Original integration tests
+│   └── integration_testv2.py    # Tutorial-style integration tests
+├── db_upgrade.sh                # Database upgrade script
+├── db_downgrade.sh              # Database downgrade script
+├── run.py                       # Application entry point
+└── README.md                    # This file
+```
