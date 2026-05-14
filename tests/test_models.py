@@ -32,4 +32,35 @@ def add_test_data():
     db.session.add_all([user1, user2, user3])
     db.session.commit()
 
+class UserModelTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        add_test_data()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def test_password_hashing(self):
+        user = Users.query.filter_by(email="albert@gmail.com").first()
+        self.assertTrue(user.check_password("password1"))
+        self.assertFalse(user.check_password("wrongpassword"))
+    
+    def test_sports_property(self):
+        user = Users.query.filter_by(email="albert@gmail.com").first()
+        self.assertEqual(user.sport_1, "Tennis")
+        self.assertEqual(user.sport_2, "Basketball")
+        self.assertEqual(user.sport_3, "Soccer")
+        self.assertEqual(user.sports, ["Tennis", "Basketball", "Soccer"])
+    
+    def test_get_id(self):
+        user = Users.query.filter_by(email="albert@gmail.com").first()
+        self.assertIsInstance(user.get_id(), str)
+
+
 
