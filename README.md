@@ -250,27 +250,13 @@ The project includes comprehensive Selenium integration tests for end-to-end tes
 **macOS:**
 
 ```bash
-/opt/homebrew/bin/python3 testing/integration_testv2.py -v
+/opt/homebrew/bin/python3 testing/integration_test.py -v
 ```
 
 **Windows (with virtual environment activated):**
 
 ```cmd
-python testing/integration_testv2.py -v
-```
-
-### Run Original Integration Tests
-
-**macOS:**
-
-```bash
-/opt/homebrew/bin/python3 testing/integration.py -v
-```
-
-**Windows (with virtual environment activated):**
-
-```cmd
-python testing/integration.py -v
+python testing/integration_test.py -v
 ```
 
 ### Test Coverage
