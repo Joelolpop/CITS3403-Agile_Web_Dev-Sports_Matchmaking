@@ -1,4 +1,3 @@
-
 import os
 import socket
 import sys
@@ -91,7 +90,6 @@ class BaseSeleniumIntegrationTest(unittest.TestCase):
 			os.remove(cls.db_path)
 
 		os.environ.pop("DATABASE_URL", None)
-
 
 	def setUp(self):
 		# Ensure each test starts from a clean database and anonymous browser session.
@@ -197,8 +195,8 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 		self.assertIn("MatchUp", self.driver.title)
 		self.assertTrue(self.driver.find_element(By.ID, "formsu").is_displayed())
-		
-    def test_02_signup_and_profile_update(self):
+
+	def test_02_signup_and_profile_update(self):
 		unique = int(time.time() * 1000)
 		email = f"tutorial_user_{unique}@example.com"
 
@@ -207,8 +205,8 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 
 		body_text = self._get_body_text()
 		self.assertIn("Profile updated successfully", body_text)
-		
-    def test_03_login_and_create_event(self):
+
+	def test_03_login_and_create_event(self):
 		unique = int(time.time() * 1000)
 		email = f"event_owner_{unique}@example.com"
 
@@ -231,8 +229,8 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 
 		self.wait.until(EC.url_contains("/events/"))
 		self.assertIn("Tutorial Tennis Match", self._get_body_text())
-		
-    def test_04_friend_request_accept_and_remove(self):
+
+	def test_04_friend_request_accept_and_remove(self):
 		unique = int(time.time() * 1000)
 		user_a_email = f"friend_a_{unique}@example.com"
 		user_b_email = f"friend_b_{unique}@example.com"
