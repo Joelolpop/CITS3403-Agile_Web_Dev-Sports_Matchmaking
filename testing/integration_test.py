@@ -231,3 +231,74 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 
 		self.wait.until(EC.url_contains("/events/"))
 		self.assertIn("Tutorial Tennis Match", self._get_body_text())
+		
+    def test_04_friend_request_accept_and_remove(self):
+		unique = int(time.time() * 1000)
+		user_a_email = f"friend_a_{unique}@example.com"
+		user_b_email = f"friend_b_{unique}@example.com"
+
+		self._signup("Alice", "Smith", user_a_email)
+		self._complete_profile("6009", "FEMALE", ["Soccer"])
+		self._logout()
+
+		self._signup("Bob", "Jones", user_b_email)
+		self._complete_profile("6008", "MALE", ["Soccer"])
+		self._logout()
+
+		# User A sends request via matching page connect button.
+		self._login(user_a_email)
+		self.driver.get(f"{self.base_url}/matching")
+		# If we got bounced to home unexpectedly, retry login once then reopen matching.
+		if "/matching" not in self.driver.current_url:
+			self._login(user_a_email)
+			self.driver.get(f"{self.base_url}/matching")
+		connect_btn = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".connect-btn")))
+		self._safe_click(connect_btn)
+		self.wait.until(EC.staleness_of(connect_btn))
+		self._logout()
+
+		# User B accepts request in friends page.
+		self._login(user_b_email)
+		self.driver.get(f"{self.base_url}/friends")
+		accept_btn = None
+		for _ in range(8):
+			buttons = self.driver.find_elements(By.XPATH, "//button[normalize-space()='Accept']")
+			if buttons:
+				accept_btn = buttons[0]
+				break
+			time.sleep(1)
+			self.driver.refresh()
+			self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
+		self.assertIsNotNone(accept_btn, "Accept button did not appear for User B after refresh retries")
+		self._safe_click(accept_btn)
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".alert-success")))
+		self.assertIn("Friend request accepted", self._get_body_text())
+		# Wait again and verify pending request action is no longer visible.
+		time.sleep(1)
+		self.driver.refresh()
+		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+		self.wait.until(lambda d: len(d.find_elements(By.XPATH, "//button[normalize-space()='Accept']")) == 0)
+		self._logout()
+
+		# User A removes friend from friend profile page.
+		self._login(user_a_email)
+		self.driver.get(f"{self.base_url}/friends")
+		view_profile_link = self.wait.until(
+			EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/friends/') and normalize-space()='View Profile']"))
+		)
+		self._safe_click(view_profile_link)
+		remove_open_btn = self.wait.until(
+			EC.element_to_be_clickable((By.XPATH, "//button[contains(normalize-space(), 'Remove Friend')]"))
+		)
+		self._safe_click(remove_open_btn)
+		confirm_remove_btn = self.wait.until(EC.element_to_be_clickable((By.ID, "removeFriendBtn")))
+		self._safe_click(confirm_remove_btn)
+		self.wait.until(EC.url_contains("/friends"))
+
+		body_text = self._get_body_text()
+		self.assertIn("No friends yet", body_text)
+
+
+if __name__ == "__main__":
+	unittest.main(verbosity=2)
