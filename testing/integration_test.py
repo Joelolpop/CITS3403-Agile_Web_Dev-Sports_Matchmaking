@@ -190,3 +190,10 @@ class BaseSeleniumIntegrationTest(unittest.TestCase):
 		# Confirm authenticated session by checking that the logout link is present.
 		self.wait.until(EC.presence_of_element_located((By.XPATH, "//a[normalize-space()='Log Out']")))
 
+
+class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
+	def test_01_homepage_smoke(self):
+		self._go_home()
+		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+		self.assertIn("MatchUp", self.driver.title)
+		self.assertTrue(self.driver.find_element(By.ID, "formsu").is_displayed())
