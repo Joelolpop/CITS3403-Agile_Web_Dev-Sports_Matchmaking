@@ -172,4 +172,71 @@ The project requires the following packages:
 pip install flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug sqlalchemy alembic email-validator selenium webdriver-manager
 ```
 
-**Note:** The `--break-system-packages` flag on macOS is needed due to PEP 668 restrictions in certain Python environments. On Windows, using a virtual environment isolates dependencies safely.
+
+## Running the Application
+
+Before running the application, ensure all dependencies are installed and you're in the project root directory.
+
+### macOS
+
+```bash
+flask run
+```
+
+### Windows
+
+With virtual environment activated:
+
+```cmd
+flask run
+```
+
+Or alternatively:
+
+```cmd
+python -m flask run
+```
+
+### Access the Application
+
+Once the server is running, open your browser and navigate to:
+
+- **Application URL**: http://127.0.0.1:5000
+- **Default Port**: 5000
+
+The application will reload automatically when you make code changes (development mode).
+
+
+## Database Migrations
+
+The project uses Alembic for managing database schema migrations alongside SQLAlchemy.
+
+### Running Migrations
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 db_upgrade.sh
+```
+
+**Windows:**
+
+```cmd
+python db_upgrade.sh
+```
+
+### Downgrading Database
+
+If needed, downgrade the database schema:
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 db_downgrade.sh
+```
+
+**Windows:**
+
+```cmd
+python db_downgrade.sh
+```
