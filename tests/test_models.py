@@ -110,4 +110,61 @@ class MatchingScoreTestCase(unittest.TestCase):
 
         self.assertIsNotNone(score)
 
+class MatchingModelTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        add_test_data()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def test_matching_both_accept(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        match = Matching(user_a_id=user1.user_id, user_b_id=user2.user_id, response_a='Accept', response_b='Accept')
+
+        db.session.add(match)
+        db.session.commit()
+
+        self.assertEqual(match.result, 'Friends')
+
+    def test_matching_one_reject(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        match = Matching(user_a_id=user1.user_id, user_b_id=user2.user_id, response_a='Accept', response_b='Reject')
+
+        db.session.add(match)
+        db.session.commit()
+
+        self.assertEqual(match.result, 'rejected')
+    
+    def test_matching_both_reject(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        match = Matching(user_a_id=user1.user_id, user_b_id=user2.user_id, response_a='Reject', response_b='Reject')
+
+        db.session.add(match)
+        db.session.commit()
+
+        self.assertEqual(match.result, 'rejected')
+
+    def test_matching_first_rejects(self):
+        user1 = Users.query.filter_by(email="albert@gmail,com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        match = Matching(user_a_id=user1.user_id, user_b_id=user2.user_id, response_a='Reject', response_b='Accept')
+
+        db.session.add(match)
+        db.session.commit()
+
+        self.assertEqual(match.result, 'rejected')
 
