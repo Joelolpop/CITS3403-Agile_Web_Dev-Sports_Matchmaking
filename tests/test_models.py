@@ -144,7 +144,7 @@ class MatchingModelTestCase(unittest.TestCase):
         db.session.add(match)
         db.session.commit()
 
-        self.assertEqual(match.result, 'rejected')
+        self.assertEqual(match.result, 'Skip')
     
     def test_matching_both_reject(self):
         user1 = Users.query.filter_by(email="albert@gmail.com").first()
@@ -155,10 +155,10 @@ class MatchingModelTestCase(unittest.TestCase):
         db.session.add(match)
         db.session.commit()
 
-        self.assertEqual(match.result, 'rejected')
+        self.assertEqual(match.result, 'Skip')
 
     def test_matching_first_rejects(self):
-        user1 = Users.query.filter_by(email="albert@gmail,com").first()
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
         user2 = Users.query.filter_by(email="isaac@gmail.com").first()
 
         match = Matching(user_a_id=user1.user_id, user_b_id=user2.user_id, response_a='Reject', response_b='Accept')
@@ -166,5 +166,57 @@ class MatchingModelTestCase(unittest.TestCase):
         db.session.add(match)
         db.session.commit()
 
-        self.assertEqual(match.result, 'rejected')
+        self.assertEqual(match.result, 'Skip')
 
+class RoutesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        add_test_data()
+        self.client = self.app.test_client()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+    
+    def test_home_page(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_signup_page(self):
+        response = self.client.post('/signup', data={
+            "first_name": "New",
+            "last_name": "User",
+            "email": "newuser@gmail.com",
+            "password": "newpassword"
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        user = Users.query.filter_by(email="newuser@gmail.com").first()
+        self.assertIsNotNone(user)
+    
+    def test_login_page(self):
+        response = self.client.post('/login', data={
+            "email": "albert@gmail.com",
+            "password": "password1"
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_friends_search_json(self):
+        self.client.post('/login', data={
+            "email": "albert@gmail.com",
+            "password": "password1"
+        }, follow_redirects=True)
+
+        response = self.client.get('/friends/search?q=isaac')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        self.assertIn('friends', data)
+
+if __name__ == '__main__':
+    unittest.main()
