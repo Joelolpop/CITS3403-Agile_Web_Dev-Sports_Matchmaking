@@ -207,3 +207,27 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 
 		body_text = self._get_body_text()
 		self.assertIn("Profile updated successfully", body_text)
+		
+    def test_03_login_and_create_event(self):
+		unique = int(time.time() * 1000)
+		email = f"event_owner_{unique}@example.com"
+
+		self._signup("Event", "Owner", email)
+		self._complete_profile("6009", "MALE", ["Tennis"])
+		self._logout()
+
+		self._login(email)
+		self.wait.until(EC.presence_of_element_located((By.ID, "create-box")))
+
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='event_name']").send_keys("Tutorial Tennis Match")
+		Select(self.driver.find_element(By.CSS_SELECTOR, "#create-box select[name='sport']")).select_by_visible_text("Tennis")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='spots_total']").send_keys("12")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='date']").send_keys("05162026")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='time']").send_keys("1830")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='location']").send_keys("Nedlands")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box input[name='postcode']").send_keys("6009")
+		self.driver.find_element(By.CSS_SELECTOR, "#create-box textarea[name='description']").send_keys("Tutorial-driven event")
+		self._safe_click(self.driver.find_element(By.CSS_SELECTOR, "#create-box button[type='submit']"))
+
+		self.wait.until(EC.url_contains("/events/"))
+		self.assertIn("Tutorial Tennis Match", self._get_body_text())
