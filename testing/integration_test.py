@@ -44,3 +44,50 @@ class ServerThread(threading.Thread):
 		self.server.shutdown()
 		self.ctx.pop()
 
+
+class BaseSeleniumIntegrationTest(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		fd, cls.db_path = tempfile.mkstemp(suffix=".sqlite3")
+		os.close(fd)
+		os.environ["DATABASE_URL"] = f"sqlite:///{cls.db_path}"
+
+		cls.app = create_app()
+		cls.app.config.update(TESTING=True, WTF_CSRF_ENABLED=False)
+
+		with cls.app.app_context():
+			db.drop_all()
+			db.create_all()
+
+		cls.host = "127.0.0.1"
+		cls.port = get_free_port()
+		cls.base_url = f"http://{cls.host}:{cls.port}"
+		cls.server_thread = ServerThread(cls.app, cls.host, cls.port)
+		cls.server_thread.start()
+
+		options = webdriver.ChromeOptions()
+		options.add_argument("--headless=new")
+		options.add_argument("--window-size=1440,1000")
+		options.add_argument("--disable-gpu")
+		options.add_argument("--no-sandbox")
+
+		cls.driver = webdriver.Chrome(
+			service=Service(ChromeDriverManager().install()),
+			options=options,
+		)
+		cls.wait = WebDriverWait(cls.driver, 12)
+		time.sleep(0.2)
+
+	@classmethod
+	def tearDownClass(cls):
+		cls.driver.quit()
+		cls.server_thread.shutdown()
+
+		with cls.app.app_context():
+			db.session.remove()
+			db.drop_all()
+
+		if os.path.exists(cls.db_path):
+			os.remove(cls.db_path)
+
+		os.environ.pop("DATABASE_URL", None)
