@@ -134,3 +134,42 @@ pip install flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug 
 ```cmd
 python -c "import flask; print('Flask version:', flask.__version__)"
 ```
+
+
+## Python Dependencies
+
+The project requires the following packages:
+
+**Runtime Dependencies:**
+- `flask`: Web framework
+- `flask-login`: User session management
+- `flask-migrate`: Database migrations with Alembic
+- `flask-sqlalchemy`: SQL toolkit and ORM
+- `flask-wtf`: CSRF protection and form handling
+- `werkzeug`: WSGI utilities and security
+- `sqlalchemy`: SQL toolkit and object-relational mapping
+- `alembic`: Database schema migration tool
+- `email-validator`: Email validation library
+
+**Testing Dependencies:**
+- `selenium`: Web automation for integration testing
+- `webdriver-manager`: Automatic WebDriver management
+
+### Installing Dependencies
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 -m pip install --break-system-packages \
+	flask flask-login flask-migrate flask-sqlalchemy flask-wtf \
+	werkzeug sqlalchemy alembic email-validator \
+	selenium webdriver-manager
+```
+
+**Windows (with virtual environment activated):**
+
+```cmd
+pip install flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug sqlalchemy alembic email-validator selenium webdriver-manager
+```
+
+**Note:** The `--break-system-packages` flag on macOS is needed due to PEP 668 restrictions in certain Python environments. On Windows, using a virtual environment isolates dependencies safely.
