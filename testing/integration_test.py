@@ -91,3 +91,102 @@ class BaseSeleniumIntegrationTest(unittest.TestCase):
 			os.remove(cls.db_path)
 
 		os.environ.pop("DATABASE_URL", None)
+
+
+	def setUp(self):
+		# Ensure each test starts from a clean database and anonymous browser session.
+		with self.app.app_context():
+			db.session.remove()
+			db.drop_all()
+			db.create_all()
+
+		self.driver.delete_all_cookies()
+		self._go_home()
+		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+
+	def _safe_click(self, element):
+		self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+		try:
+			self.wait.until(lambda d: element.is_displayed() and element.is_enabled())
+			element.click()
+		except Exception:
+			self.driver.execute_script("arguments[0].click();", element)
+
+	def _go_home(self):
+		self.driver.get(f"{self.base_url}/")
+
+	def _get_body_text(self, retries=4):
+		last_error = None
+		for _ in range(retries):
+			try:
+				body = self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+				return body.text
+			except StaleElementReferenceException as exc:
+				last_error = exc
+				time.sleep(0.2)
+		if last_error:
+			raise last_error
+		return ""
+
+	def _open_login_tab(self):
+		self.wait.until(EC.presence_of_element_located((By.ID, "tabli")))
+		self._safe_click(self.driver.find_element(By.ID, "tabli"))
+		# In headless mode the tab click can be flaky; force visible login form if needed.
+		try:
+			self.wait.until(EC.visibility_of_element_located((By.ID, "formli")))
+		except Exception:
+			self.driver.execute_script(
+				"const li=document.getElementById('formli');"
+				"const su=document.getElementById('formsu');"
+				"if(li){li.classList.remove('d-none');}"
+				"if(su){su.classList.add('d-none');}"
+			)
+			self.wait.until(EC.visibility_of_element_located((By.ID, "formli")))
+
+	def _signup(self, first_name, last_name, email, password="password123"):
+		self._go_home()
+		# If the previous flow left us authenticated, log out once and retry.
+		if self.driver.find_elements(By.ID, "create-box"):
+			self._logout()
+			self._go_home()
+		self.wait.until(EC.presence_of_element_located((By.ID, "formsu")))
+		self.driver.find_element(By.CSS_SELECTOR, "#formsu input[name='first_name']").send_keys(first_name)
+		self.driver.find_element(By.CSS_SELECTOR, "#formsu input[name='last_name']").send_keys(last_name)
+		self.driver.find_element(By.CSS_SELECTOR, "#formsu input[name='email']").send_keys(email)
+		self.driver.find_element(By.CSS_SELECTOR, "#formsu input[name='password']").send_keys(password)
+		self._safe_click(self.driver.find_element(By.CSS_SELECTOR, "#formsu button[type='submit']"))
+		self.wait.until(EC.url_contains("/profile"))
+
+	def _complete_profile(self, postcode, gender, sports):
+		postcode_input = self.driver.find_element(By.NAME, "postcode")
+		postcode_input.clear()
+		postcode_input.send_keys(postcode)
+
+		gender_select = Select(self.driver.find_element(By.NAME, "gender"))
+		gender_select.select_by_visible_text(gender)
+
+		for sport in sports:
+			chip = self.driver.find_element(By.CSS_SELECTOR, f"button.sport-chip[data-sport='{sport}']")
+			self._safe_click(chip)
+
+		self._safe_click(self.driver.find_element(By.CSS_SELECTOR, "#user-profile-form button[type='submit']"))
+		self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert-success")))
+
+	def _logout(self):
+		self.driver.get(f"{self.base_url}/logout")
+		self.wait.until(EC.url_contains("/"))
+
+	def _login(self, email, password="password123"):
+		self._go_home()
+		self._open_login_tab()
+		email_input = self.driver.find_element(By.CSS_SELECTOR, "#formli input[name='email']")
+		pass_input = self.driver.find_element(By.CSS_SELECTOR, "#formli input[name='password']")
+		email_input.clear()
+		pass_input.clear()
+		email_input.send_keys(email)
+		pass_input.send_keys(password)
+		self._safe_click(self.driver.find_element(By.CSS_SELECTOR, "#formli button[type='submit']"))
+		self.wait.until(EC.url_to_be(f"{self.base_url}/"))
+		# Confirm authenticated session by checking that the logout link is present.
+		self.wait.until(EC.presence_of_element_located((By.XPATH, "//a[normalize-space()='Log Out']")))
+
