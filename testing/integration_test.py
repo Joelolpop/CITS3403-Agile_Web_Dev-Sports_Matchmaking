@@ -197,3 +197,13 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 		self.assertIn("MatchUp", self.driver.title)
 		self.assertTrue(self.driver.find_element(By.ID, "formsu").is_displayed())
+		
+    def test_02_signup_and_profile_update(self):
+		unique = int(time.time() * 1000)
+		email = f"tutorial_user_{unique}@example.com"
+
+		self._signup("Selenium", "Learner", email)
+		self._complete_profile("6009", "MALE", ["Soccer", "Tennis"])
+
+		body_text = self._get_body_text()
+		self.assertIn("Profile updated successfully", body_text)
