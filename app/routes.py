@@ -389,6 +389,8 @@ def events_joined_available():
         Events.event_id.notin_(joined_event_ids)
     ).all()
 
+    events_available = [e for e in events_available if e.spots_filled < e.spots_total]
+
     def event_score(event):
         if event.sport in user_sports:
             sport_score = 0
