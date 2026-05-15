@@ -250,13 +250,13 @@ The project includes comprehensive Selenium integration tests for end-to-end tes
 **macOS:**
 
 ```bash
-/opt/homebrew/bin/python3 testing/integration_test.py -v
+/opt/homebrew/bin/python3 testing/systems_test.py -v
 ```
 
 **Windows (with virtual environment activated):**
 
 ```cmd
-python testing/integration_test.py -v
+python testing/systems_test.py -v
 ```
 
 ### Test Coverage
@@ -270,12 +270,12 @@ python testing/integration_test.py -v
 
 **macOS:**
 ```bash
-python3 -m unittest tests/test_models.py
+python3 -m unittest testing/test_models.py
 ```
 
 **Windows:**
 ```bash
-python -m unittest tests/test_models.py
+python -m unittest testing/test_models.py
 ```
 
 ### Test Coverage
@@ -309,6 +309,15 @@ Tests Flask routes using the test client:
 - **test_signup_page** — signing up creates a new user in the database
 - **test_login_page** — correct credentials return 200 OK
 - **test_friends_search_json** — friends search returns valid JSON with a `friends` key
+
+#### FriendRequestModelTestCase
+
+Tests the `FriendRequest` model and its business logic:
+- **test_friend_request_status** — verifies pending, accepted, and rejected statuses save correctly
+- **test_friend_request_duplicate** — verifies creating duplicate friend request fails
+- **test_self_friend_request** — verifies that users cannot send a friend request to themselves
+- **test_friend_request_relationships** — verifies that requests for requester and receiver are correct
+- **test_friend_request_acceptance_creates_friendship** — verifies that accepted request will create a friends relation
 
 ## Project Structure
 
