@@ -1,6 +1,21 @@
 # CITS3403-Agile_Web_Dev-Sports_Matchmaking
 
-A sports matchmaking web application that connects athletes based on shared interests and skill levels. Built with Flask, featuring user authentication, event management, friend connections, and intelligent matching algorithms.
+## Purpose of application
+MatchUp is sports matchmaking web application that connects athletes based on shared interests and skill levels. It is built with Flask, featuring user authentication, event management, friend connections, and intelligent matching algorithms.
+
+It connects local athletes by allowing users to create a profile detailing their preferred sports and postcode. From there, users can browse and create local sporting events, joining ones that match their interests or hosting their own with a set number of spots.
+
+The matching system surfaces compatible athletes based on shared sport preferences and proximity, making it easy to find others in your area to play with. Users can also send and manage friend requests to build a regular network of people they enjoy competing with. They can also obtain the phone number or instagram of their friends for further communication.
+
+All event and connection data is persisted across sessions, so your friends list and event history are always waiting for you when you log back in.
+
+## Group Members
+
+| GitHub Username | Name                        | Student ID |
+| --------------- | --------------------------- | ---------- |
+| Joelolpop       | Narendra Madiadipoera       | 24051053   |
+| jashil8r        | Jashil Kumar Ramchurn       | 24550902   |
+| TheBabieGamer   | Thisen Kevinnath Malalasena | 24094581   |
 
 ## Project Overview
 
