@@ -294,7 +294,8 @@ class TestSeleniumTutorialStyleSuite(BaseSeleniumIntegrationTest):
 		self._safe_click(remove_open_btn)
 		confirm_remove_btn = self.wait.until(EC.element_to_be_clickable((By.ID, "removeFriendBtn")))
 		self._safe_click(confirm_remove_btn)
-		self.wait.until(EC.url_contains("/friends"))
+
+		self.wait.until(EC.url_to_be(f"{self.base_url}/friends"))
 
 		self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
