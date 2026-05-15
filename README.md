@@ -358,7 +358,7 @@ Tests the `FriendRequest` model and its business logic:
 │   └── versions/                # Migration scripts
 ├── testing/                     # Test suites
 │   ├── __init__.py              # Package Folder
-│   ├── integration_test.py      # Integration tests      
+│   ├── systems_test.py          # Systems tests      
 │   └── test_models.py           # Unit Tests
 ├── db_upgrade.sh                # Database upgrade script
 ├── db_downgrade.sh              # Database downgrade script
