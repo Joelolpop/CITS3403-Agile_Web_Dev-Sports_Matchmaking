@@ -192,6 +192,41 @@ pip install flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug 
 
 Before running the application, ensure all dependencies are installed and you're in the project root directory.
 
+## Database Migrations
+
+The project uses Alembic for managing database schema migrations alongside SQLAlchemy.
+
+### Running Migrations
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 db_upgrade.sh
+```
+
+**Windows:**
+
+```cmd
+flask db upgrade
+```
+
+### Downgrading Database
+
+If needed, downgrade the database schema:
+
+**macOS:**
+
+```bash
+/opt/homebrew/bin/python3 db_downgrade.sh
+```
+
+**Windows:**
+
+```cmd
+flask db downgrade
+```
+
+
 ### macOS
 
 ```bash
@@ -221,40 +256,6 @@ Once the server is running, open your browser and navigate to:
 
 The application will reload automatically when you make code changes (development mode).
 
-
-## Database Migrations
-
-The project uses Alembic for managing database schema migrations alongside SQLAlchemy.
-
-### Running Migrations
-
-**macOS:**
-
-```bash
-/opt/homebrew/bin/python3 db_upgrade.sh
-```
-
-**Windows:**
-
-```cmd
-python db_upgrade.sh
-```
-
-### Downgrading Database
-
-If needed, downgrade the database schema:
-
-**macOS:**
-
-```bash
-/opt/homebrew/bin/python3 db_downgrade.sh
-```
-
-**Windows:**
-
-```cmd
-python db_downgrade.sh
-```
 
 ## Running Tests
 
