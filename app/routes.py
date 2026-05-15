@@ -89,7 +89,8 @@ def create_friend_pair(user_a_id, user_b_id):
 
 @main.route("/")
 def homepage():
-    return render_template("homepage.html")
+    today = datetime.date.today().isoformat()
+    return render_template("homepage.html", today=today)
 
 
 @main.route("/signup", methods=["POST"])
@@ -431,6 +432,10 @@ def create_event():
         flash("Invalid date or time", "danger")
         return redirect(url_for("main.homepage"))
     
+    if date < datetime.date.today():
+        flash("Event date cannot be in the past.", "danger")
+        return redirect(url_for("main.homepage"))
+    
     postcode, postcode_error = parse_postcode(postcode_raw, required=True)
     if postcode_error:
         flash(postcode_error, "danger")
@@ -602,6 +607,10 @@ def event_edit(event_id):
             flash("Invalid date or time value.", "danger")
             return redirect(url_for("main.event_edit", event_id=event_id))
         
+        if event.date < datetime.date.today():
+            flash("Event date cannot be in the past.", "danger")
+            return redirect(url_for("main.event_edit", event_id=event_id))
+        
         
         event.event_name  = event_name
         event.sport       = sport
@@ -614,7 +623,7 @@ def event_edit(event_id):
         flash("Event updated successfully.", "success")
         return redirect(url_for("main.event_view", event_id=event_id))
 
-    return render_template("event_edit.html", event=event)
+    return render_template("event_edit.html", event=event, today=datetime.date.today().isoformat())
 
 @main.route("/events/<int:event_id>/delete", methods=["POST"])
 @login_required
