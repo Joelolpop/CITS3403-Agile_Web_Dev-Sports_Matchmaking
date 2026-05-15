@@ -1,7 +1,7 @@
 import unittest
 from app import create_app, db
 from app.models import Users, Matching, Friends, FriendRequest
-from app.routes import calculate_match_score
+from app.routes import calculate_match_score, create_friend_pair
 from app.config import TestConfig
 
 def add_test_data():
@@ -217,6 +217,94 @@ class RoutesTestCase(unittest.TestCase):
 
         data = response.get_json()
         self.assertIn('friends', data)
+
+class FriendRequestModelTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        add_test_data()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def test_friend_request_status(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        friend_request = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request)
+        db.session.commit()
+        self.assertEqual(friend_request.status, "pending")
+
+        friend_request.status = "accepted"
+        db.session.commit()
+        self.assertEqual(friend_request.status, "accepted")
+
+        FriendRequest.query.filter_by(requester_id=user1.user_id, receiver_id=user2.user_id).delete()
+
+        friend_request = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request)
+        db.session.commit()
+
+        friend_request.status = "rejected"
+        db.session.commit()
+        self.assertEqual(friend_request.status, "rejected")
+
+    def test_friend_request_duplicate(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        friend_request1 = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request1)
+        db.session.commit()
+
+        friend_request2 = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request2)
+        #Check that adding a duplicate friend request return ok as False
+        self.assertFalse(db.session.commit())
+    
+    def test_self_friend_request(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+
+        friend_request = FriendRequest(requester_id=user1.user_id, receiver_id=user1.user_id, status="pending")
+        db.session.add(friend_request)
+
+        #Check that adding a self friend request return ok as False
+        self.assertFalse(db.session.commit())
+    
+    def test_friend_request_relationships(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        friend_request = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request)
+        db.session.commit()
+
+        self.assertEqual(friend_request.requester, user1)
+        self.assertEqual(friend_request.receiver, user2)
+    
+    def test_friend_request_acceptance_creates_friendship(self):
+        user1 = Users.query.filter_by(email="albert@gmail.com").first()
+        user2 = Users.query.filter_by(email="isaac@gmail.com").first()
+
+        friend_request = FriendRequest(requester_id=user1.user_id, receiver_id=user2.user_id, status="pending")
+        db.session.add(friend_request)
+        db.session.commit()
+
+        friend_request.status = "accepted"
+        create_friend_pair(user1.user_id, user2.user_id)
+        db.session.commit()
+
+        friendship = Friends.query.filter_by(user_id=user1.user_id, friend_id=user2.user_id).first()
+        self.assertIsNotNone(friendship)
+
+        
+            
 
 if __name__ == '__main__':
     unittest.main()
