@@ -16,6 +16,13 @@ document.getElementById('removeFriendBtn').addEventListener('click', function() 
     .then(res => res.json())
     .then(data => {
         if (data.ok) {
+            // Safely hide the modal
+            const modalEL = document.getElementById('removeFriendModal');
+            const modal = bootstrap.Modal.getInstance(modalEL);
+            if (modal) {
+                modal.hide();
+            }
+            
             window.location.href = redirectUrl;
         } else {
             alert(data.message);

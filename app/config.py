@@ -6,3 +6,8 @@ default_database_location = 'sqlite:///' + os.path.join(basedir, 'app.db')
 class Config: 
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or default_database_location 
     SECRET_KEY = "iluvjashil"
+
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    TESTING = True
+    WTF_CSRF_ENABLED = False

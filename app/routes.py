@@ -18,7 +18,8 @@ PUBLIC_ENDPOINTS = {
     "main.signup",
 }
 
-
+# Runs before every request where it redirects unauthenticated users
+# to the homepage unless they are accessing a public endpoint
 @main.before_app_request
 def require_login_for_protected_routes():
     if current_user.is_authenticated:
@@ -32,6 +33,10 @@ def require_login_for_protected_routes():
 
     return redirect(url_for("main.homepage"))
 
+
+# Calculates a match score between two users based on shared sports and postcode proximity. Lower score = better match.
+# sport_score: 3 minus number of common sports (max 3, min 0) 
+# postcode_score: absolute difference between postcodes
 def calculate_match_score(current_user, other_user):
     current_sports = set(filter(None, [
         current_user.sport_1,
@@ -55,7 +60,8 @@ def calculate_match_score(current_user, other_user):
     total_score = sport_score + postcode_score
     return total_score
 
-
+# Validates a postcode — must be exactly 4 digits
+# Returns (int, None) on success or (None, error_message) on failure
 def parse_postcode(raw_postcode, required=True):
     postcode = (raw_postcode or "").strip()
 
@@ -76,11 +82,12 @@ def allowed_image_filename(filename):
     extension = os.path.splitext(filename)[1].lower()
     return extension in ALLOWED_IMAGE_EXTENSIONS
 
-
+# Checks if two users are already friends by looking up the Friends table
 def are_friends(user_id, other_user_id):
     return Friends.query.filter_by(user_id=user_id, friend_id=other_user_id).first() is not None
 
-
+# Creates a friendship between two users in both directions
+# Checks first to avoid duplicate records
 def create_friend_pair(user_a_id, user_b_id):
     if not are_friends(user_a_id, user_b_id):
         db.session.add(Friends(user_id=user_a_id, friend_id=user_b_id))
@@ -231,6 +238,8 @@ def friends_list():
         outgoing_requests=outgoing_requests,
     )
 
+# Friend search route — returns JSON for AJAX requests
+# Filters friends by name, username or sport matching the query
 @main.route("/friends/search")
 @login_required
 def friend_search():
@@ -262,7 +271,8 @@ def friend_search():
     
     return jsonify({"friends": results})
 
-
+# Sends a friend request — checks for existing friendship,
+# duplicate requests, and self-requests before creating
 @main.route("/friends/request", methods=["POST"])
 @login_required
 def send_friend_request():
@@ -368,7 +378,8 @@ def remove_friend(friend_id):
     flash("Friend removed.", "success")
     return jsonify({"ok": True})
 
-
+# Events route — separates events into joined and available
+# Available events are scored by sport match and postcode proximity
 @main.route("/events")
 @login_required
 def events_joined_available():
@@ -389,6 +400,8 @@ def events_joined_available():
     events_available = Events.query.filter(
         Events.event_id.notin_(joined_event_ids)
     ).all()
+
+    events_available = [e for e in events_available if e.spots_filled < e.spots_total]
 
     def event_score(event):
         if event.sport in user_sports:
@@ -640,6 +653,8 @@ def event_delete(event_id):
     flash("Event deleted.", "success")
     return redirect(url_for("main.homepage"))
 
+# Matching route — filters out existing friends and users with
+# pending friend requests, then scores and sorts remaining candidates
 @main.route("/matching")
 @login_required
 def matching():

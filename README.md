@@ -265,13 +265,13 @@ The project includes comprehensive Selenium integration tests for end-to-end tes
 **macOS:**
 
 ```bash
-/opt/homebrew/bin/python3 testing/integration_test.py -v
+/opt/homebrew/bin/python3 testing/systems_test.py -v
 ```
 
 **Windows (with virtual environment activated):**
 
 ```cmd
-python testing/integration_test.py -v
+python testing/systems_test.py -v
 ```
 
 ### Test Coverage
@@ -280,6 +280,59 @@ python testing/integration_test.py -v
 - **Login & Event Creation**: User authentication and event management
 - **Friend Workflow**: Sending friend requests, accepting, and removing connections
 - **Smoke Tests**: Homepage accessibility and basic functionality
+
+### Run Unit Tests
+
+**macOS:**
+```bash
+python3 -m unittest testing/test_models.py
+```
+
+**Windows:**
+```bash
+python -m unittest testing/test_models.py
+```
+
+### Test Coverage
+
+#### UserModelTestCase
+
+Tests the `Users` model:
+- **test_password_hashing** — verifies correct password is accepted and wrong password is rejected
+- **test_sports_property** — verifies the sports property returns the correct list of sports
+- **test_get_id** — verifies `get_id()` returns a string as required by Flask-Login
+
+#### MatchingScoreTestCase
+
+Tests the `calculate_match_score` function:
+- **test_match_score_one_common_sport** — users with 1 common sport and 1 postcode apart score 3
+- **test_match_score_no_common_sport** — users with no common sports and 10 postcodes apart score 13
+- **test_match_score_no_postcode** — verifies missing postcode is handled without crashing
+
+#### MatchingModelTestCase
+
+Tests the `Matching` model's `result` property — covers all Accept/Reject combinations:
+- **test_matching_both_accept** — both accept returns `'Friends'`
+- **test_matching_one_reject** — one rejects returns `'Skip'`
+- **test_matching_both_reject** — both reject returns `'Skip'`
+- **test_matching_first_rejects** — first user rejects returns `'Skip'`
+
+#### RoutesTestCase
+
+Tests Flask routes using the test client:
+- **test_home_page** — homepage returns 200 OK
+- **test_signup_page** — signing up creates a new user in the database
+- **test_login_page** — correct credentials return 200 OK
+- **test_friends_search_json** — friends search returns valid JSON with a `friends` key
+
+#### FriendRequestModelTestCase
+
+Tests the `FriendRequest` model and its business logic:
+- **test_friend_request_status** — verifies pending, accepted, and rejected statuses save correctly
+- **test_friend_request_duplicate** — verifies creating duplicate friend request fails
+- **test_self_friend_request** — verifies that users cannot send a friend request to themselves
+- **test_friend_request_relationships** — verifies that requests for requester and receiver are correct
+- **test_friend_request_acceptance_creates_friendship** — verifies that accepted request will create a friends relation
 
 ## Project Structure
 
@@ -301,11 +354,12 @@ python testing/integration_test.py -v
 │       ├── event_*.html         # Event-related templates
 │       ├── friends_*.html       # Friend-related templates
 │       └── matching.html        # Matching interface
-├── migrations/                   # Alembic database migrations
+├── migrations/                  # Alembic database migrations
 │   └── versions/                # Migration scripts
-├── testing/                      # Test suites
-│   ├── integration.py           # Original integration tests
-│   └── integration_testv2.py    # Tutorial-style integration tests
+├── testing/                     # Test suites
+│   ├── __init__.py              # Package Folder
+│   ├── systems_test.py          # Systems tests      
+│   └── test_models.py           # Unit Tests
 ├── db_upgrade.sh                # Database upgrade script
 ├── db_downgrade.sh              # Database downgrade script
 ├── run.py                       # Application entry point
