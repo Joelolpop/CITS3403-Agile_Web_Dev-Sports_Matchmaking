@@ -10,7 +10,7 @@
 
   <!-- Player cards -->
   <div class="row g-3">
-    {% for score, user in matches %}
+    {% for user in matches %}
     <div class="col-12 col-md-6 col-lg-4 player-card-container">
       <div class="card h-100 border-success shadow-sm" style="background: var(--background-nav);">
         <div class="card-body text-center p-4">
@@ -29,7 +29,13 @@
             {% endif %}
           </div>
           <h3 class="card-title"style="color: var(--green-name);">{{ user.first_name }} {{ user.last_name }}</h3>
-          <p class="card-text text-white">{{ '%04d' % (user.postcode | int) }}</p>
+          <p class="card-text text-white">
+            {% if user.postcode %}
+              {{ '%04d' % user.postcode }}
+            {% else %}
+              Postcode not provided
+            {% endif %}
+          </p>
           <p class="card-text text-white">
             {{ user.sport_1 }}
             {% if user.sport_2 %}, {{ user.sport_2 }}{% endif %}
