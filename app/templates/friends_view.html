@@ -80,7 +80,9 @@
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
                             <div>
-                                <h5 class="mb-0 text-white">{{ friend.username or friend.first_name }}</h5>
+                                <h4 class="mb-0 text-success fw-semibold">
+                                    {{ friend.username }} <span class="text-white">- {{friend.first_name }} {{ friend.last_name }}</span>
+                                </h4>
                                 <small class="text-secondary">{{ '%04d' % friend.postcode if friend.postcode else "No postcode" }}</small>
                             </div>
                         </div>
