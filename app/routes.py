@@ -677,12 +677,6 @@ def matching():
             friends_ids.add(pair.requester_id)
 
     candidates = Users.query.filter(Users.user_id.notin_(friends_ids)).all()
-    scored = []
-    for u in candidates:
-        if u.postcode and str(u.postcode).strip().isdigit():
-            score = calculate_match_score(current_user, u)
-            scored.append((score, u))
-            
-    scored = sorted(scored, key=lambda x: x[0], reverse=True)
+    scored = sorted(candidates, key=lambda u: calculate_match_score(current_user, u))
 
     return render_template("matching.html", matches=scored)
