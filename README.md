@@ -39,31 +39,6 @@ This project consists of:
 - [Project Structure](#project-structure)
 
 
-## Quick Start
-
-**Choose your platform below:**
-
-### macOS
-
-```bash
-brew install python && brew install --cask google-chrome
-/opt/homebrew/bin/python3 -m pip install --break-system-packages flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug sqlalchemy alembic email-validator selenium webdriver-manager
-flask run
-```
-
-Open http://127.0.0.1:5000
-
-### Windows
-
-```cmd
-python -m venv venv
-venv\Scripts\activate
-pip install flask flask-login flask-migrate flask-sqlalchemy flask-wtf werkzeug sqlalchemy alembic email-validator selenium webdriver-manager
-flask run
-```
-
-Open http://127.0.0.1:5000
-
 ## Prerequisites
 
 ### macOS
