@@ -44,7 +44,7 @@ searchInput.addEventListener('input', function() {
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex align-items-center mb-3">
                                     <div>
-                                        <h5 class="mb-0 text-white">${friend.username || friend.first_name}</h5>
+                                        <h5 class="mb-0 text-success fw-semibold">${ friend.username } <span class="text-white">- ${friend.first_name } ${friend.last_name }</span></h5>
                                         <small class="text-secondary">${friend.postcode || "No postcode"}</small>
                                     </div>
                                 </div>
